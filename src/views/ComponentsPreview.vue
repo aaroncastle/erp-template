@@ -1,70 +1,80 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import LoginForm from '@/components/business/LoginForm.vue'
-import ChangePasswordForm from '@/components/business/ChangePasswordForm.vue'
-import Avatar from '@/components/business/Avatar.vue'
-import Badge from '@/components/business/Badge.vue'
-import DropdownMenu, { type MenuItem } from '@/components/business/DropdownMenu.vue'
-import UserInfoPanel, { type UserInfo } from '@/components/business/UserInfoPanel.vue'
+import CardHeader from '@/components/business/CardHeader.vue'
+import CopyableNumber from '@/components/business/CopyableNumber.vue'
+import FilterTabs from '@/components/business/FilterTabs.vue'
+import SearchFilterBar from '@/components/business/SearchFilterBar.vue'
+import ConfirmDialog from '@/components/business/ConfirmDialog.vue'
+import type { MenuItem } from '@/components/business/DropdownMenu.vue'
 
-// 模拟用户数据
-const mockUser = ref<UserInfo>({
-  id: '1',
-  name: '张三',
-  employeeNumber: 'EMP001',
-  department: '销售一部',
-  role: 'department-user',
-})
-
-// 模拟登录表单
-const loginLoading = ref(false)
-const loginError = ref('')
-
-function handleLogin(credentials: { employeeNumber: string; password: string }) {
-  console.log('登录:', credentials)
-  loginLoading.value = true
-  setTimeout(() => {
-    loginLoading.value = false
-    loginError.value = '工号或密码错误'
-  }, 1000)
-}
-
-// 模拟修改密码
-const passwordLoading = ref(false)
-const passwordError = ref('')
-
-function handleChangePassword(data: any) {
-  console.log('修改密码:', data)
-  passwordLoading.value = true
-  setTimeout(() => {
-    passwordLoading.value = false
-  }, 1000)
-}
-
-// 模拟下拉菜单
-const dropdownItems: MenuItem[] = [
-  { key: 'item1', label: '选项 1' },
-  { key: 'item2', label: '选项 2' },
+// CardHeader 菜单项
+const headerMenuItems: MenuItem[] = [
+  { key: 'edit', label: '编辑' },
+  { key: 'duplicate', label: '复制' },
   { key: 'divider', label: '', divider: true },
-  { key: 'item3', label: '选项 3', disabled: true },
-  { key: 'item4', label: '危险操作', danger: true },
+  { key: 'delete', label: '删除', danger: true },
 ]
 
-function handleMenuSelect(item: MenuItem) {
-  console.log('选择菜单项:', item)
+// FilterTabs 数据
+const tabs = ref([
+  { key: 'all', label: '全部', count: 12 },
+  { key: 'pending', label: '待处理', count: 3 },
+  { key: 'progress', label: '进行中', count: 5 },
+  { key: 'completed', label: '已完成', count: 4 },
+])
+const activeTab = ref('all')
+
+// SearchFilterBar 数据
+const filters = [
+  {
+    key: 'customer',
+    label: '客户',
+    options: [
+      { label: '洛阳轴承集团', value: '1' },
+      { label: '中石化洛阳分公司', value: '2' },
+      { label: '洛阳能源密封件', value: '3' },
+    ],
+  },
+  {
+    key: 'status',
+    label: '状态',
+    options: [
+      { label: '待处理', value: 'pending' },
+      { label: '进行中', value: 'progress' },
+      { label: '已完成', value: 'completed' },
+    ],
+  },
+]
+
+// ConfirmDialog
+const showConfirmDialog = ref(false)
+const confirmType = ref<'warning' | 'danger'>('warning')
+
+function openDangerDialog() {
+  confirmType.value = 'danger'
+  showConfirmDialog.value = true
 }
 
-// 用户信息面板事件
-function handleProfile() {
-  console.log('查看个人信息')
+function openWarningDialog() {
+  confirmType.value = 'warning'
+  showConfirmDialog.value = true
 }
 
-function handleSettings() {
-  console.log('系统设置')
+function handleConfirm() {
+  console.log('确认操作')
+  showConfirmDialog.value = false
 }
 
-function handleLogout() {
-  console.log('退出登录')
+function handleSearch(value: string) {
+  console.log('搜索:', value)
+}
+
+function handleFilter(key: string, value: string) {
+  console.log('筛选:', key, value)
+}
+
+function handleCreate() {
+  console.log('新建')
 }
 </script>
 
@@ -74,200 +84,177 @@ function handleLogout() {
       <!-- 页面标题 -->
       <div class="space-y-2">
         <h1 class="text-2xl font-bold text-foreground">组件预览</h1>
-        <p class="text-muted-foreground">Phase 5 - 认证完善组件</p>
+        <p class="text-muted-foreground">Phase 6 - 通用UI增强组件</p>
       </div>
 
-      <!-- Phase 5 组件预览 -->
-
-      <!-- 登录表单 -->
-      <div class="rounded-lg border border-border p-6 space-y-4">
-        <div>
-          <h2 class="text-lg font-semibold text-foreground">登录表单</h2>
-          <p class="text-sm text-muted-foreground mt-1">
-            用户登录界面
-          </p>
+      <!-- CardHeader 卡片标题 -->
+      <div class="rounded-lg border border-border">
+        <div class="p-4 border-b border-border">
+          <h2 class="text-lg font-semibold text-foreground">CardHeader - 卡片标题区域</h2>
+          <p class="text-sm text-muted-foreground mt-1">卡片深色标题区域，含状态徽章和更多菜单</p>
         </div>
 
-        <div class="max-w-sm mx-auto">
-          <LoginForm
-            :loading="loginLoading"
-            :error="loginError"
-            @submit="handleLogin"
-            @forgot-password="() => console.log('忘记密码')"
-          />
-        </div>
+        <div class="p-4 space-y-4">
+          <!-- 示例 1: 基础标题 -->
+          <div class="rounded-lg overflow-hidden border border-border">
+            <CardHeader title="订单 ORD-20260615-003" status="pending_delivery" />
+            <div class="p-4 bg-background">
+              <p class="text-sm text-muted-foreground">卡片内容区域</p>
+            </div>
+          </div>
 
-        <div class="text-sm text-muted-foreground space-y-1">
-          <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 工号/密码输入</p>
-          <p>• 密码显示/隐藏切换</p>
-          <p>• 加载状态</p>
-          <p>• 错误提示</p>
-          <p>• 忘记密码链接</p>
-        </div>
-      </div>
+          <!-- 示例 2: 带菜单 -->
+          <div class="rounded-lg overflow-hidden border border-border">
+            <CardHeader
+              title="报价单 QT-20260618-001"
+              subtitle="洛阳轴承集团"
+              status="pending"
+              :menu-items="headerMenuItems"
+              @menu-select="(item) => console.log('菜单:', item)"
+            />
+            <div class="p-4 bg-background">
+              <p class="text-sm text-muted-foreground">卡片内容区域</p>
+            </div>
+          </div>
 
-      <!-- 修改密码表单 -->
-      <div class="rounded-lg border border-border p-6 space-y-4">
-        <div>
-          <h2 class="text-lg font-semibold text-foreground">修改密码表单</h2>
-          <p class="text-sm text-muted-foreground mt-1">
-            首次登录或修改密码
-          </p>
-        </div>
-
-        <div class="max-w-sm mx-auto">
-          <ChangePasswordForm
-            :loading="passwordLoading"
-            :error="passwordError"
-            :require-old-password="true"
-            @submit="handleChangePassword"
-            @cancel="() => console.log('取消修改')"
-          />
-        </div>
-
-        <div class="text-sm text-muted-foreground space-y-1">
-          <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 旧密码验证</p>
-          <p>• 新密码强度检查</p>
-          <p>• 确认密码匹配</p>
-          <p>• 密码显示/隐藏切换</p>
-          <p>• 实时验证提示</p>
+          <!-- 示例 3: 自定义标题插槽 -->
+          <div class="rounded-lg overflow-hidden border border-border">
+            <CardHeader>
+              <template #title>
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-sm font-semibold text-foreground">ORD-20260610-002</span>
+                  <span class="px-2 py-0.5 text-xs bg-blue-500/10 text-blue-500 rounded">紧急</span>
+                </div>
+              </template>
+            </CardHeader>
+            <div class="p-4 bg-background">
+              <p class="text-sm text-muted-foreground">自定义标题内容</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- 头像组件 -->
-      <div class="rounded-lg border border-border p-6 space-y-4">
-        <div>
-          <h2 class="text-lg font-semibold text-foreground">头像组件</h2>
-          <p class="text-sm text-muted-foreground mt-1">
-            用户头像展示
-          </p>
+      <!-- CopyableNumber 可复制编号 -->
+      <div class="rounded-lg border border-border">
+        <div class="p-4 border-b border-border">
+          <h2 class="text-lg font-semibold text-foreground">CopyableNumber - 可复制编号</h2>
+          <p class="text-sm text-muted-foreground mt-1">点击复制图标可复制编号到剪贴板</p>
         </div>
 
-        <div class="flex items-center gap-4">
-          <Avatar name="张三" size="sm" />
-          <Avatar name="李四" size="md" />
-          <Avatar name="王五" size="lg" />
-          <Avatar name="赵六" size="xl" />
-          <Avatar size="md" />
-        </div>
+        <div class="p-4 space-y-4">
+          <!-- 示例 1: 订单编号 -->
+          <div class="flex items-center gap-4 p-3 bg-muted rounded-lg">
+            <span class="text-sm text-muted-foreground">订单编号:</span>
+            <CopyableNumber value="ORD-20260615-003" />
+          </div>
 
-        <div class="text-sm text-muted-foreground space-y-1">
-          <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 多种尺寸（sm/md/lg/xl）</p>
-          <p>• 支持图片/首字母/默认图标</p>
-          <p>• 圆形/方形形状</p>
-          <p>• 基于名字生成背景色</p>
-        </div>
-      </div>
+          <!-- 示例 2: 报价单编号 -->
+          <div class="flex items-center gap-4 p-3 bg-muted rounded-lg">
+            <span class="text-sm text-muted-foreground">报价单号:</span>
+            <CopyableNumber value="QT-20260618-001" label="报价单" />
+          </div>
 
-      <!-- 徽章组件 -->
-      <div class="rounded-lg border border-border p-6 space-y-4">
-        <div>
-          <h2 class="text-lg font-semibold text-foreground">徽章组件</h2>
-          <p class="text-sm text-muted-foreground mt-1">
-            通知数量/状态标记
-          </p>
-        </div>
-
-        <div class="flex items-center gap-8">
-          <Badge :count="5">
-            <div class="h-10 w-10 rounded-md bg-muted" />
-          </Badge>
-          <Badge :count="99" max-count="99">
-            <div class="h-10 w-10 rounded-md bg-muted" />
-          </Badge>
-          <Badge :count="100" max-count="99">
-            <div class="h-10 w-10 rounded-md bg-muted" />
-          </Badge>
-          <Badge dot>
-            <div class="h-10 w-10 rounded-md bg-muted" />
-          </Badge>
-          <Badge :count="0" show-zero>
-            <div class="h-10 w-10 rounded-md bg-muted" />
-          </Badge>
-        </div>
-
-        <div class="text-sm text-muted-foreground space-y-1">
-          <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 数字显示</p>
-          <p>• 最大值限制（99+）</p>
-          <p>• 红点模式</p>
-          <p>• 多种颜色类型</p>
-          <p>• 显示零值选项</p>
+          <!-- 示例 3: 物料码 -->
+          <div class="flex items-center gap-4 p-3 bg-muted rounded-lg">
+            <span class="text-sm text-muted-foreground">物料码:</span>
+            <CopyableNumber value="BCR-0001" :show-label="false" />
+          </div>
         </div>
       </div>
 
-      <!-- 下拉菜单 -->
-      <div class="rounded-lg border border-border p-6 space-y-4">
-        <div>
-          <h2 class="text-lg font-semibold text-foreground">下拉菜单</h2>
-          <p class="text-sm text-muted-foreground mt-1">
-            操作菜单
-          </p>
+      <!-- FilterTabs 状态筛选 -->
+      <div class="rounded-lg border border-border">
+        <div class="p-4 border-b border-border">
+          <h2 class="text-lg font-semibold text-foreground">FilterTabs - Tab状态筛选</h2>
+          <p class="text-sm text-muted-foreground mt-1">列表页顶部的状态筛选Tab</p>
         </div>
 
-        <div class="flex items-center gap-4">
-          <DropdownMenu
-            :items="dropdownItems"
-            align="left"
-            @select="handleMenuSelect"
-          >
-            <button class="px-4 py-2 rounded-md bg-primary text-primary-foreground">
-              点击打开
+        <div class="p-4 space-y-4">
+          <FilterTabs v-model:active-tab="activeTab" :tabs="tabs" />
+          <div class="p-3 bg-muted rounded-lg">
+            <p class="text-sm text-muted-foreground">当前选中: {{ activeTab }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SearchFilterBar 搜索筛选栏 -->
+      <div class="rounded-lg border border-border">
+        <div class="p-4 border-b border-border">
+          <h2 class="text-lg font-semibold text-foreground">SearchFilterBar - 搜索筛选栏</h2>
+          <p class="text-sm text-muted-foreground mt-1">下拉筛选 + 搜索框 + 新建按钮</p>
+        </div>
+
+        <div class="p-4 space-y-4">
+          <!-- 示例 1: 完整功能 -->
+          <div class="border border-border rounded-lg overflow-hidden">
+            <SearchFilterBar
+              :filters="filters"
+              search-placeholder="搜索客户名称、订单编号..."
+              :show-create-button="true"
+              create-button-text="新建订单"
+              @search="handleSearch"
+              @filter="handleFilter"
+              @create="handleCreate"
+            />
+            <div class="p-4 bg-background">
+              <p class="text-sm text-muted-foreground">列表内容区域</p>
+            </div>
+          </div>
+
+          <!-- 示例 2: 仅搜索 -->
+          <div class="border border-border rounded-lg overflow-hidden">
+            <SearchFilterBar
+              search-placeholder="搜索..."
+              @search="handleSearch"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- ConfirmDialog 二次确认 -->
+      <div class="rounded-lg border border-border">
+        <div class="p-4 border-b border-border">
+          <h2 class="text-lg font-semibold text-foreground">ConfirmDialog - 二次确认对话框</h2>
+          <p class="text-sm text-muted-foreground mt-1">危险操作的二次确认弹窗</p>
+        </div>
+
+        <div class="p-4 space-y-4">
+          <div class="flex items-center gap-3">
+            <button
+              class="px-4 py-2 text-sm font-medium bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-colors"
+              @click="openWarningDialog"
+            >
+              警告确认
             </button>
-          </DropdownMenu>
-
-          <DropdownMenu
-            :items="dropdownItems"
-            align="right"
-            @select="handleMenuSelect"
-          >
-            <button class="px-4 py-2 rounded-md bg-muted">
-              右对齐菜单
+            <button
+              class="px-4 py-2 text-sm font-medium bg-destructive text-white rounded-md hover:bg-destructive/90 transition-colors"
+              @click="openDangerDialog"
+            >
+              危险确认
             </button>
-          </DropdownMenu>
-        </div>
+          </div>
 
-        <div class="text-sm text-muted-foreground space-y-1">
-          <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 点击触发</p>
-          <p>• 左/右对齐</p>
-          <p>• 禁用项</p>
-          <p>• 危险操作项</p>
-          <p>• 分隔线</p>
-          <p>• 点击外部关闭</p>
-          <p>• ESC键关闭</p>
-          <p>• 动画效果</p>
+          <ConfirmDialog
+            v-model:open="showConfirmDialog"
+            :title="confirmType === 'danger' ? '确认删除？' : '确认取消选择？'"
+            :description="confirmType === 'danger' ? '删除后无法恢复，请确认操作。' : '已选择 5 个订单项，取消后将清空所有选择。'"
+            :type="confirmType"
+            :confirm-text="confirmType === 'danger' ? '确认删除' : '确认取消'"
+            @confirm="handleConfirm"
+          />
         </div>
       </div>
 
-      <!-- 用户信息面板 -->
-      <div class="rounded-lg border border-border p-6 space-y-4">
-        <div>
-          <h2 class="text-lg font-semibold text-foreground">用户信息面板</h2>
-          <p class="text-sm text-muted-foreground mt-1">
-            Header用户菜单
-          </p>
-        </div>
-
-        <div class="flex items-center justify-end p-4 bg-muted rounded-lg">
-          <UserInfoPanel
-            :user="mockUser"
-            @profile="handleProfile"
-            @settings="handleSettings"
-            @change-password="() => console.log('修改密码')"
-            @logout="handleLogout"
-          />
-        </div>
-
-        <div class="text-sm text-muted-foreground space-y-1">
-          <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 用户头像显示</p>
-          <p>• 姓名和工号显示</p>
-          <p>• 下拉菜单（个人信息/设置/修改密码/退出）</p>
-        </div>
+      <!-- 功能特性说明 -->
+      <div class="rounded-lg border border-border p-4">
+        <h3 class="text-sm font-semibold text-foreground mb-2">Phase 6 组件特性</h3>
+        <ul class="text-sm text-muted-foreground space-y-1">
+          <li>• <strong>CardHeader</strong>: 卡片标题区域，支持状态徽章和下拉菜单</li>
+          <li>• <strong>CopyableNumber</strong>: 可复制编号，点击复制并显示Toast提示</li>
+          <li>• <strong>FilterTabs</strong>: Tab状态筛选，支持计数显示</li>
+          <li>• <strong>SearchFilterBar</strong>: 搜索筛选栏，支持多筛选条件和新建按钮</li>
+          <li>• <strong>ConfirmDialog</strong>: 二次确认对话框，支持警告和危险两种类型</li>
+        </ul>
       </div>
     </div>
   </div>

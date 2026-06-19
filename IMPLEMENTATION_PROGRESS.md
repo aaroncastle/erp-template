@@ -30,6 +30,13 @@
 - [x] DropdownMenu.vue - 下拉菜单
 - [x] UserInfoPanel.vue - 用户信息面板
 
+### Phase 6 - 通用UI增强组件（已验收）
+- [x] CardHeader.vue - 卡片标题区域
+- [x] CopyableNumber.vue - 可复制编号
+- [x] FilterTabs.vue - Tab状态筛选
+- [x] SearchFilterBar.vue - 搜索筛选栏
+- [x] ConfirmDialog.vue - 二次确认对话框
+
 ### 基础布局组件（模板库）
 - [x] Header.vue - 顶部导航栏
 - [x] RightPanel.vue - 右侧悬浮框
