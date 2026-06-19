@@ -39,7 +39,8 @@ const searchInput = ref<HTMLInputElement | null>(null)
 watch(() => props.open, (value) => {
   if (value) {
     nextTick(() => {
-      searchInput.value?.focus()
+      const input = searchInput.value?.$el as HTMLInputElement
+      input?.focus()
     })
   }
 })
