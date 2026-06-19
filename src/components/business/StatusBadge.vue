@@ -18,6 +18,16 @@ export type StatusType =
   | 'issued'
   | 'partial'
   | 'overdue'
+  | 'enabled'
+  | 'disabled'
+  | 'locked'
+  | 'deleted'
+  | 'success'
+  | 'failed'
+  | 'info'
+  | 'warning'
+  | 'error'
+  | 'debug'
 
 interface Props {
   status: StatusType
@@ -92,6 +102,46 @@ const statusConfig = {
   overdue: {
     label: '已逾期',
     class: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+  },
+  enabled: {
+    label: '已启用',
+    class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+  },
+  disabled: {
+    label: '已停用',
+    class: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300',
+  },
+  locked: {
+    label: '已锁定',
+    class: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+  },
+  deleted: {
+    label: '已删除',
+    class: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300',
+  },
+  success: {
+    label: '成功',
+    class: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+  },
+  failed: {
+    label: '失败',
+    class: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+  },
+  info: {
+    label: '信息',
+    class: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+  },
+  warning: {
+    label: '警告',
+    class: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+  },
+  error: {
+    label: '错误',
+    class: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+  },
+  debug: {
+    label: '调试',
+    class: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300',
   },
 }
 

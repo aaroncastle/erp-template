@@ -1,127 +1,78 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import QuotationDetail, { type QuotationDetail as QuotationDetailType } from '@/components/business/QuotationDetail.vue'
-import InvoiceCard, { type Invoice } from '@/components/business/InvoiceCard.vue'
-import PaymentCard, { type Payment } from '@/components/business/PaymentCard.vue'
-import WarehouseCard, { type WarehouseRecord } from '@/components/business/WarehouseCard.vue'
+import UserManagement, { type User } from '@/components/business/UserManagement.vue'
+import PermissionConfig, { type Permission } from '@/components/business/PermissionConfig.vue'
+import ApprovalConfig, { type ApprovalFlow } from '@/components/business/ApprovalConfig.vue'
+import SystemLog, { type SystemLog as SystemLogType } from '@/components/business/SystemLog.vue'
+import LoginLog, { type LoginLog as LoginLogType } from '@/components/business/LoginLog.vue'
 
-const showQuotationDetail = ref(false)
-
-// 模拟报价单详情数据
-const mockQuotationDetail = ref<QuotationDetailType>({
-  id: '1',
-  number: 'QUO-20260619-001',
-  customerName: '洛阳轴承集团',
-  contact: '张经理',
-  phone: '138****1234',
-  status: 'pending',
-  totalAmount: 25850.00,
-  validUntil: '2026-07-19',
-  createdAt: '2026-06-19',
-  updatedAt: '2026-06-19',
-  items: [
-    {
-      id: '1',
-      productName: '机械密封 A 型',
-      specification: 'Φ100×Φ120×50',
-      quantity: 10,
-      unitPrice: 850.00,
-      amount: 8500.00,
-    },
-    {
-      id: '2',
-      productName: '机械密封 B 型',
-      specification: 'Φ120×Φ140×60',
-      quantity: 8,
-      unitPrice: 950.00,
-      amount: 7600.00,
-    },
-    {
-      id: '3',
-      productName: '机械密封 C 型',
-      specification: 'Φ80×Φ100×40',
-      quantity: 15,
-      unitPrice: 650.00,
-      amount: 9750.00,
-    },
-  ],
-  remark: '请尽快确认，客户急需。',
-  createdBy: '张三（销售一部）',
-})
-
-// 模拟发票数据
-const mockInvoices = ref<Invoice[]>([
+// 模拟用户数据
+const mockUsers = ref<User[]>([
   {
     id: '1',
-    invoiceNumber: 'INV-20260619-001',
-    orderNumber: 'ORD-20260615-001',
-    customerName: '洛阳轴承集团',
-    amount: 25850.00,
-    taxAmount: 3355.50,
-    totalAmount: 29205.50,
-    issueDate: '2026-06-19',
-    status: 'issued',
-    type: 'vat_special',
+    employeeNumber: 'EMP001',
+    name: '张三',
+    phone: '138****1234',
+    role: 'department-user',
+    department: '销售一部',
+    status: 'enabled',
+    isManager: true,
+    createdAt: '2026-01-15',
+    lastLogin: '2026-06-19 09:15',
+  },
+  {
+    id: '2',
+    employeeNumber: 'EMP002',
+    name: '李四',
+    phone: '139****5678',
+    role: 'department-user',
+    department: '综合办',
+    status: 'locked',
+    createdAt: '2026-02-20',
+    lastLogin: '2026-06-18 14:30',
+  },
+  {
+    id: '3',
+    employeeNumber: 'ADMIN001',
+    name: '郝小领',
+    phone: '173****8865',
+    role: 'super-admin',
+    status: 'enabled',
+    createdAt: '2026-01-01',
+    lastLogin: '2026-06-19 10:00',
   },
 ])
 
-// 模拟收款数据
-const mockPayments = ref<Payment[]>([
-  {
-    id: '1',
-    paymentNumber: 'PAY-20260619-001',
-    orderNumber: 'ORD-20260615-001',
-    customerName: '洛阳轴承集团',
-    amount: 29205.50,
-    paidAmount: 15000.00,
-    paymentDate: '2026-06-19',
-    dueDate: '2026-07-19',
-    status: 'partial',
-    method: 'bank_transfer',
-  },
-])
-
-// 模拟仓储记录数据
-const mockWarehouseRecords = ref<WarehouseRecord[]>([
-  {
-    id: '1',
-    recordNumber: 'WH-20260619-001',
-    orderNumber: 'ORD-20260615-001',
-    type: 'inbound',
-    status: 'completed',
-    operator: '李四（仓储部）',
-    operationDate: '2026-06-19',
-    items: [
-      {
-        id: '1',
-        productName: '机械密封 A 型',
-        specification: 'Φ100×Φ120×50',
-        quantity: 10,
-        unit: '个',
-        location: 'A-01-01',
-      },
-      {
-        id: '2',
-        productName: '机械密封 B 型',
-        specification: 'Φ120×Φ140×60',
-        quantity: 8,
-        unit: '个',
-        location: 'A-01-02',
-      },
-    ],
-  },
-])
-
-function handleQuotationEdit(quotation: QuotationDetailType) {
-  console.log('编辑报价单:', quotation)
+function handleCreateUser(user: Partial<User>) {
+  console.log('创建用户:', user)
 }
 
-function handleQuotationDelete(quotation: QuotationDetailType) {
-  console.log('删除报价单:', quotation)
+function handleEditUser(user: User) {
+  console.log('编辑用户:', user)
 }
 
-function handleQuotationSubmit(quotation: QuotationDetailType) {
-  console.log('提交报价单:', quotation)
+function handleDeleteUser(user: User) {
+  console.log('删除用户:', user)
+}
+
+function handleEnableUser(user: User) {
+  console.log('启用用户:', user)
+}
+
+function handleDisableUser(user: User) {
+  console.log('停用用户:', user)
+}
+
+function handleUnlockUser(user: User) {
+  console.log('解锁用户:', user)
+}
+
+function handleSavePermissions(permissions: Permission[]) {
+  console.log('保存权限:', permissions)
+}
+
+function handleSaveFlows(flows: ApprovalFlow[]) {
+  console.log('保存审批流程:', flows)
 }
 </script>
 
@@ -131,128 +82,120 @@ function handleQuotationSubmit(quotation: QuotationDetailType) {
       <!-- 页面标题 -->
       <div class="space-y-2">
         <h1 class="text-2xl font-bold text-foreground">组件预览</h1>
-        <p class="text-muted-foreground">Phase 3 - 业务组件</p>
+        <p class="text-muted-foreground">Phase 4 - 管理组件</p>
       </div>
 
-      <!-- Phase 3 组件预览 -->
+      <!-- Phase 4 组件预览 -->
 
-      <!-- 报价单详情 -->
-      <div class="rounded-lg border border-border p-6 space-y-4">
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="text-lg font-semibold text-foreground">报价单详情</h2>
-            <p class="text-sm text-muted-foreground mt-1">
-              报价单详细信息展示和编辑
-            </p>
-          </div>
-          <button
-            class="px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-            @click="showQuotationDetail = true"
-          >
-            打开报价单详情
-          </button>
-        </div>
-
-        <div class="text-sm text-muted-foreground space-y-1">
-          <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 报价项目列表</p>
-          <p>• 客户信息展示</p>
-          <p>• 日期信息</p>
-          <p>• 编辑/删除/提交操作</p>
-        </div>
-      </div>
-
-      <!-- 发票卡片 -->
+      <!-- 用户管理 -->
       <div class="rounded-lg border border-border p-6 space-y-4">
         <div>
-          <h2 class="text-lg font-semibold text-foreground">发票卡片</h2>
+          <h2 class="text-lg font-semibold text-foreground">用户管理</h2>
           <p class="text-sm text-muted-foreground mt-1">
-            发票信息展示
+            用户账号管理，创建/编辑/启用/停用/解锁
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InvoiceCard
-            v-for="invoice in mockInvoices"
-            :key="invoice.id"
-            :invoice="invoice"
-            @click="() => console.log('点击发票:', invoice.id)"
-            @download="() => console.log('下载发票:', invoice.id)"
-            @print="() => console.log('打印发票:', invoice.id)"
-          />
-        </div>
+        <UserManagement
+          :users="mockUsers"
+          current-role="super-admin"
+          @create="handleCreateUser"
+          @edit="handleEditUser"
+          @delete="handleDeleteUser"
+          @enable="handleEnableUser"
+          @disable="handleDisableUser"
+          @unlock="handleUnlockUser"
+        />
 
         <div class="text-sm text-muted-foreground space-y-1">
           <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 发票信息展示</p>
-          <p>• 金额和税额显示</p>
-          <p>• 发票类型标识</p>
-          <p>• 下载/打印操作</p>
+          <p>• 用户列表展示</p>
+          <p>• 创建用户（工号、姓名、手机号、角色、部门）</p>
+          <p>• 编辑用户信息</p>
+          <p>• 启用/停用/解锁用户</p>
+          <p>• 部门领导标识</p>
         </div>
       </div>
 
-      <!-- 收款卡片 -->
+      <!-- 权限配置 -->
       <div class="rounded-lg border border-border p-6 space-y-4">
         <div>
-          <h2 class="text-lg font-semibold text-foreground">收款卡片</h2>
+          <h2 class="text-lg font-semibold text-foreground">权限配置</h2>
           <p class="text-sm text-muted-foreground mt-1">
-            收款信息展示
+            配置各模块权限
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <PaymentCard
-            v-for="payment in mockPayments"
-            :key="payment.id"
-            :payment="payment"
-            @click="() => console.log('点击收款:', payment.id)"
-          />
-        </div>
+        <PermissionConfig @save="handleSavePermissions" />
 
         <div class="text-sm text-muted-foreground space-y-1">
           <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 收款信息展示</p>
-          <p>• 应收/已收/待收金额</p>
-          <p>• 支付方式显示</p>
-          <p>• 到期日期提醒</p>
+          <p>• 按模块分组权限</p>
+          <p>• 权限开关控制</p>
+          <p>• 权限描述说明</p>
+          <p>• 保存配置</p>
         </div>
       </div>
 
-      <!-- 仓储卡片 -->
+      <!-- 审批流程配置 -->
       <div class="rounded-lg border border-border p-6 space-y-4">
         <div>
-          <h2 class="text-lg font-semibold text-foreground">仓储卡片</h2>
+          <h2 class="text-lg font-semibold text-foreground">审批流程配置</h2>
           <p class="text-sm text-muted-foreground mt-1">
-            入库/出库记录展示
+            配置各业务类型的审批流程
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <WarehouseCard
-            v-for="record in mockWarehouseRecords"
-            :key="record.id"
-            :record="record"
-            @click="() => console.log('点击仓储记录:', record.id)"
-          />
-        </div>
+        <ApprovalConfig @save="handleSaveFlows" />
 
         <div class="text-sm text-muted-foreground space-y-1">
           <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 入库/出库标识</p>
-          <p>• 物品列表展示</p>
-          <p>• 库位信息</p>
-          <p>• 操作人和日期</p>
+          <p>• 添加/删除审批流程</p>
+          <p>• 配置审批步骤</p>
+          <p>• 选择审批人</p>
+          <p>• 流程启用/停用</p>
         </div>
       </div>
 
-      <!-- 组件实例 -->
-      <QuotationDetail
-        v-model:open="showQuotationDetail"
-        :quotation="mockQuotationDetail"
-        @edit="handleQuotationEdit"
-        @delete="handleQuotationDelete"
-        @submit="handleQuotationSubmit"
-      />
+      <!-- 系统日志 -->
+      <div class="rounded-lg border border-border p-6 space-y-4">
+        <div>
+          <h2 class="text-lg font-semibold text-foreground">系统日志</h2>
+          <p class="text-sm text-muted-foreground mt-1">
+            系统操作日志查看
+          </p>
+        </div>
+
+        <SystemLog />
+
+        <div class="text-sm text-muted-foreground space-y-1">
+          <p class="font-medium text-foreground">功能特性：</p>
+          <p>• 日志级别筛选</p>
+          <p>• 搜索过滤</p>
+          <p>• 分页展示</p>
+          <p>• 日志详情查看</p>
+        </div>
+      </div>
+
+      <!-- 登录日志 -->
+      <div class="rounded-lg border border-border p-6 space-y-4">
+        <div>
+          <h2 class="text-lg font-semibold text-foreground">登录日志</h2>
+          <p class="text-sm text-muted-foreground mt-1">
+            用户登录记录查看
+          </p>
+        </div>
+
+        <LoginLog />
+
+        <div class="text-sm text-muted-foreground space-y-1">
+          <p class="font-medium text-foreground">功能特性：</p>
+          <p>• 登录状态筛选</p>
+          <p>• 搜索过滤</p>
+          <p>• 分页展示</p>
+          <p>• 登录详情（IP、设备、浏览器、地点）</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
