@@ -22,6 +22,14 @@
 - [x] SystemLog.vue - 系统日志
 - [x] LoginLog.vue - 登录日志
 
+### Phase 5 - 认证完善组件（已验收）
+- [x] LoginForm.vue - 登录表单
+- [x] ChangePasswordForm.vue - 修改密码表单
+- [x] Avatar.vue - 头像组件
+- [x] Badge.vue - 徽章组件
+- [x] DropdownMenu.vue - 下拉菜单
+- [x] UserInfoPanel.vue - 用户信息面板
+
 ### 基础布局组件（模板库）
 - [x] Header.vue - 顶部导航栏
 - [x] RightPanel.vue - 右侧悬浮框
