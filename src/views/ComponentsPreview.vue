@@ -1,199 +1,279 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import UserManagement, { type User } from '@/components/business/UserManagement.vue'
-import PermissionConfig, { type Permission } from '@/components/business/PermissionConfig.vue'
-import ApprovalConfig, { type ApprovalFlow } from '@/components/business/ApprovalConfig.vue'
-import SystemLog, { type SystemLog as SystemLogType } from '@/components/business/SystemLog.vue'
-import LoginLog, { type LoginLog as LoginLogType } from '@/components/business/LoginLog.vue'
+import LoginForm from '@/components/business/LoginForm.vue'
+import ChangePasswordForm from '@/components/business/ChangePasswordForm.vue'
+import Avatar from '@/components/business/Avatar.vue'
+import Badge from '@/components/business/Badge.vue'
+import DropdownMenu, { type MenuItem } from '@/components/business/DropdownMenu.vue'
+import UserInfoPanel, { type UserInfo } from '@/components/business/UserInfoPanel.vue'
 
 // 模拟用户数据
-const mockUsers = ref<User[]>([
-  {
-    id: '1',
-    employeeNumber: 'EMP001',
-    name: '张三',
-    phone: '138****1234',
-    role: 'department-user',
-    department: '销售一部',
-    status: 'enabled',
-    isManager: true,
-    createdAt: '2026-01-15',
-    lastLogin: '2026-06-19 09:15',
-  },
-  {
-    id: '2',
-    employeeNumber: 'EMP002',
-    name: '李四',
-    phone: '139****5678',
-    role: 'department-user',
-    department: '综合办',
-    status: 'locked',
-    createdAt: '2026-02-20',
-    lastLogin: '2026-06-18 14:30',
-  },
-  {
-    id: '3',
-    employeeNumber: 'ADMIN001',
-    name: '郝小领',
-    phone: '173****8865',
-    role: 'super-admin',
-    status: 'enabled',
-    createdAt: '2026-01-01',
-    lastLogin: '2026-06-19 10:00',
-  },
-])
+const mockUser = ref<UserInfo>({
+  id: '1',
+  name: '张三',
+  employeeNumber: 'EMP001',
+  department: '销售一部',
+  role: 'department-user',
+  unreadCount: 5,
+})
 
-function handleCreateUser(user: Partial<User>) {
-  console.log('创建用户:', user)
+// 模拟登录表单
+const loginLoading = ref(false)
+const loginError = ref('')
+
+function handleLogin(credentials: { employeeNumber: string; password: string }) {
+  console.log('登录:', credentials)
+  loginLoading.value = true
+  setTimeout(() => {
+    loginLoading.value = false
+    loginError.value = '工号或密码错误'
+  }, 1000)
 }
 
-function handleEditUser(user: User) {
-  console.log('编辑用户:', user)
+// 模拟修改密码
+const passwordLoading = ref(false)
+const passwordError = ref('')
+
+function handleChangePassword(data: any) {
+  console.log('修改密码:', data)
+  passwordLoading.value = true
+  setTimeout(() => {
+    passwordLoading.value = false
+  }, 1000)
 }
 
-function handleDeleteUser(user: User) {
-  console.log('删除用户:', user)
+// 模拟下拉菜单
+const dropdownItems: MenuItem[] = [
+  { key: 'item1', label: '选项 1' },
+  { key: 'item2', label: '选项 2' },
+  { key: 'divider', label: '', divider: true },
+  { key: 'item3', label: '选项 3', disabled: true },
+  { key: 'item4', label: '危险操作', danger: true },
+]
+
+function handleMenuSelect(item: MenuItem) {
+  console.log('选择菜单项:', item)
 }
 
-function handleEnableUser(user: User) {
-  console.log('启用用户:', user)
+// 用户信息面板事件
+function handleProfile() {
+  console.log('查看个人信息')
 }
 
-function handleDisableUser(user: User) {
-  console.log('停用用户:', user)
+function handleSettings() {
+  console.log('系统设置')
 }
 
-function handleUnlockUser(user: User) {
-  console.log('解锁用户:', user)
+function handleNotifications() {
+  console.log('通知中心')
 }
 
-function handleSavePermissions(permissions: Permission[]) {
-  console.log('保存权限:', permissions)
-}
-
-function handleSaveFlows(flows: ApprovalFlow[]) {
-  console.log('保存审批流程:', flows)
+function handleLogout() {
+  console.log('退出登录')
 }
 </script>
 
 <template>
   <div class="min-h-screen bg-background p-8">
-    <div class="max-w-7xl mx-auto space-y-8">
+    <div class="max-w-4xl mx-auto space-y-8">
       <!-- 页面标题 -->
       <div class="space-y-2">
         <h1 class="text-2xl font-bold text-foreground">组件预览</h1>
-        <p class="text-muted-foreground">Phase 4 - 管理组件</p>
+        <p class="text-muted-foreground">Phase 5 - 认证完善组件</p>
       </div>
 
-      <!-- Phase 4 组件预览 -->
+      <!-- Phase 5 组件预览 -->
 
-      <!-- 用户管理 -->
+      <!-- 登录表单 -->
       <div class="rounded-lg border border-border p-6 space-y-4">
         <div>
-          <h2 class="text-lg font-semibold text-foreground">用户管理</h2>
+          <h2 class="text-lg font-semibold text-foreground">登录表单</h2>
           <p class="text-sm text-muted-foreground mt-1">
-            用户账号管理，创建/编辑/启用/停用/解锁
+            用户登录界面
           </p>
         </div>
 
-        <UserManagement
-          :users="mockUsers"
-          current-role="super-admin"
-          @create="handleCreateUser"
-          @edit="handleEditUser"
-          @delete="handleDeleteUser"
-          @enable="handleEnableUser"
-          @disable="handleDisableUser"
-          @unlock="handleUnlockUser"
-        />
+        <div class="max-w-sm mx-auto">
+          <LoginForm
+            :loading="loginLoading"
+            :error="loginError"
+            @submit="handleLogin"
+            @forgot-password="() => console.log('忘记密码')"
+          />
+        </div>
 
         <div class="text-sm text-muted-foreground space-y-1">
           <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 用户列表展示</p>
-          <p>• 创建用户（工号、姓名、手机号、角色、部门）</p>
-          <p>• 编辑用户信息</p>
-          <p>• 启用/停用/解锁用户</p>
-          <p>• 部门领导标识</p>
+          <p>• 工号/密码输入</p>
+          <p>• 密码显示/隐藏切换</p>
+          <p>• 加载状态</p>
+          <p>• 错误提示</p>
+          <p>• 忘记密码链接</p>
         </div>
       </div>
 
-      <!-- 权限配置 -->
+      <!-- 修改密码表单 -->
       <div class="rounded-lg border border-border p-6 space-y-4">
         <div>
-          <h2 class="text-lg font-semibold text-foreground">权限配置</h2>
+          <h2 class="text-lg font-semibold text-foreground">修改密码表单</h2>
           <p class="text-sm text-muted-foreground mt-1">
-            配置各模块权限
+            首次登录或修改密码
           </p>
         </div>
 
-        <PermissionConfig @save="handleSavePermissions" />
+        <div class="max-w-sm mx-auto">
+          <ChangePasswordForm
+            :loading="passwordLoading"
+            :error="passwordError"
+            :require-old-password="true"
+            @submit="handleChangePassword"
+            @cancel="() => console.log('取消修改')"
+          />
+        </div>
 
         <div class="text-sm text-muted-foreground space-y-1">
           <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 按模块分组权限</p>
-          <p>• 权限开关控制</p>
-          <p>• 权限描述说明</p>
-          <p>• 保存配置</p>
+          <p>• 旧密码验证</p>
+          <p>• 新密码强度检查</p>
+          <p>• 确认密码匹配</p>
+          <p>• 密码显示/隐藏切换</p>
+          <p>• 实时验证提示</p>
         </div>
       </div>
 
-      <!-- 审批流程配置 -->
+      <!-- 头像组件 -->
       <div class="rounded-lg border border-border p-6 space-y-4">
         <div>
-          <h2 class="text-lg font-semibold text-foreground">审批流程配置</h2>
+          <h2 class="text-lg font-semibold text-foreground">头像组件</h2>
           <p class="text-sm text-muted-foreground mt-1">
-            配置各业务类型的审批流程
+            用户头像展示
           </p>
         </div>
 
-        <ApprovalConfig @save="handleSaveFlows" />
+        <div class="flex items-center gap-4">
+          <Avatar name="张三" size="sm" />
+          <Avatar name="李四" size="md" />
+          <Avatar name="王五" size="lg" />
+          <Avatar name="赵六" size="xl" />
+          <Avatar size="md" />
+        </div>
 
         <div class="text-sm text-muted-foreground space-y-1">
           <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 添加/删除审批流程</p>
-          <p>• 配置审批步骤</p>
-          <p>• 选择审批人</p>
-          <p>• 流程启用/停用</p>
+          <p>• 多种尺寸（sm/md/lg/xl）</p>
+          <p>• 支持图片/首字母/默认图标</p>
+          <p>• 圆形/方形形状</p>
+          <p>• 基于名字生成背景色</p>
         </div>
       </div>
 
-      <!-- 系统日志 -->
+      <!-- 徽章组件 -->
       <div class="rounded-lg border border-border p-6 space-y-4">
         <div>
-          <h2 class="text-lg font-semibold text-foreground">系统日志</h2>
+          <h2 class="text-lg font-semibold text-foreground">徽章组件</h2>
           <p class="text-sm text-muted-foreground mt-1">
-            系统操作日志查看
+            通知数量/状态标记
           </p>
         </div>
 
-        <SystemLog />
+        <div class="flex items-center gap-8">
+          <Badge :count="5">
+            <div class="h-10 w-10 rounded-md bg-muted" />
+          </Badge>
+          <Badge :count="99" max-count="99">
+            <div class="h-10 w-10 rounded-md bg-muted" />
+          </Badge>
+          <Badge :count="100" max-count="99">
+            <div class="h-10 w-10 rounded-md bg-muted" />
+          </Badge>
+          <Badge dot>
+            <div class="h-10 w-10 rounded-md bg-muted" />
+          </Badge>
+          <Badge :count="0" show-zero>
+            <div class="h-10 w-10 rounded-md bg-muted" />
+          </Badge>
+        </div>
 
         <div class="text-sm text-muted-foreground space-y-1">
           <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 日志级别筛选</p>
-          <p>• 搜索过滤</p>
-          <p>• 分页展示</p>
-          <p>• 日志详情查看</p>
+          <p>• 数字显示</p>
+          <p>• 最大值限制（99+）</p>
+          <p>• 红点模式</p>
+          <p>• 多种颜色类型</p>
+          <p>• 显示零值选项</p>
         </div>
       </div>
 
-      <!-- 登录日志 -->
+      <!-- 下拉菜单 -->
       <div class="rounded-lg border border-border p-6 space-y-4">
         <div>
-          <h2 class="text-lg font-semibold text-foreground">登录日志</h2>
+          <h2 class="text-lg font-semibold text-foreground">下拉菜单</h2>
           <p class="text-sm text-muted-foreground mt-1">
-            用户登录记录查看
+            操作菜单
           </p>
         </div>
 
-        <LoginLog />
+        <div class="flex items-center gap-4">
+          <DropdownMenu
+            :items="dropdownItems"
+            trigger="click"
+            align="left"
+            @select="handleMenuSelect"
+          >
+            <button class="px-4 py-2 rounded-md bg-primary text-primary-foreground">
+              点击打开
+            </button>
+          </DropdownMenu>
+
+          <DropdownMenu
+            :items="dropdownItems"
+            trigger="hover"
+            align="right"
+            @select="handleMenuSelect"
+          >
+            <button class="px-4 py-2 rounded-md bg-muted">
+              悬停打开
+            </button>
+          </DropdownMenu>
+        </div>
 
         <div class="text-sm text-muted-foreground space-y-1">
           <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 登录状态筛选</p>
-          <p>• 搜索过滤</p>
-          <p>• 分页展示</p>
-          <p>• 登录详情（IP、设备、浏览器、地点）</p>
+          <p>• 点击/悬停触发</p>
+          <p>• 左/右对齐</p>
+          <p>• 禁用项</p>
+          <p>• 危险操作项</p>
+          <p>• 分隔线</p>
+          <p>• 动画效果</p>
+        </div>
+      </div>
+
+      <!-- 用户信息面板 -->
+      <div class="rounded-lg border border-border p-6 space-y-4">
+        <div>
+          <h2 class="text-lg font-semibold text-foreground">用户信息面板</h2>
+          <p class="text-sm text-muted-foreground mt-1">
+            Header用户菜单
+          </p>
+        </div>
+
+        <div class="flex items-center justify-end p-4 bg-muted rounded-lg">
+          <UserInfoPanel
+            :user="mockUser"
+            @profile="handleProfile"
+            @settings="handleSettings"
+            @notifications="handleNotifications"
+            @change-password="() => console.log('修改密码')"
+            @logout="handleLogout"
+          />
+        </div>
+
+        <div class="text-sm text-muted-foreground space-y-1">
+          <p class="font-medium text-foreground">功能特性：</p>
+          <p>• 用户头像显示</p>
+          <p>• 未读通知徽章</p>
+          <p>• 下拉菜单（个人信息/设置/修改密码/退出）</p>
+          <p>• 响应式布局</p>
         </div>
       </div>
     </div>
