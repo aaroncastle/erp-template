@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vue Test</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+    <input v-model="employeeId" placeholder="工号">
+    <input v-model="password" type="password" placeholder="密码">
+    <button :disabled="!isValid">登录</button>
+    <p>isValid: {{ isValid }}</p>
+    <p>employeeId: {{ employeeId }}</p>
+    <p>password: {{ password }}</p>
+  </div>
+  <script>
+    const { createApp, ref, computed } = Vue
+    createApp({
+      setup() {
+        const employeeId = ref('')
+        const password = ref('')
+        const isValid = computed(() => {
+          return employeeId.value.trim().length > 0 && password.value.length > 0
+        })
+        return { employeeId, password, isValid }
+      }
+    }).mount('#app')
+  </script>
+</body>
+</html>
