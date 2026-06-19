@@ -15,6 +15,13 @@
 - [x] PaymentCard.vue - 收款卡片
 - [x] WarehouseCard.vue - 仓储卡片
 
+### Phase 4 - 管理组件（已验收）
+- [x] UserManagement.vue - 用户管理
+- [x] PermissionConfig.vue - 权限配置
+- [x] ApprovalConfig.vue - 审批流程配置（含默认抄送人）
+- [x] SystemLog.vue - 系统日志
+- [x] LoginLog.vue - 登录日志
+
 ### 基础布局组件（模板库）
 - [x] Header.vue - 顶部导航栏
 - [x] RightPanel.vue - 右侧悬浮框
