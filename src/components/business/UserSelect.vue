@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { Search, User, X } from '@lucide/vue'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -33,6 +33,16 @@ const emit = defineEmits<{
 
 const searchQuery = ref('')
 const selectedId = ref<string>('')
+const searchInput = ref<HTMLInputElement | null>(null)
+
+// 监听打开状态，自动聚焦
+watch(() => props.open, (value) => {
+  if (value) {
+    nextTick(() => {
+      searchInput.value?.focus()
+    })
+  }
+})
 
 // 过滤用户列表
 const filteredUsers = computed(() => {
@@ -81,6 +91,7 @@ function close() {
           <div class="relative">
             <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
+              ref="searchInput"
               v-model="searchQuery"
               :placeholder="placeholder"
               class="pl-10"
