@@ -2,12 +2,18 @@
 
 ## ✅ 已完成
 
-### Phase 1 - 认证与权限组件
+### Phase 1 - 认证与权限组件（已验收）
 - [x] UserSelect.vue - 用户选择器
 - [x] DepartmentSelect.vue - 部门选择器
 - [x] RoleSelect.vue - 角色选择器
 - [x] AlertBanner.vue - 提醒横幅
 - [x] VerifyCodeInput.vue - 验证码输入框
+
+### Phase 3 - 业务组件（已验收）
+- [x] QuotationDetail.vue - 报价单详情抽屉
+- [x] InvoiceCard.vue - 发票卡片
+- [x] PaymentCard.vue - 收款卡片
+- [x] WarehouseCard.vue - 仓储卡片
 
 ### 基础布局组件（模板库）
 - [x] Header.vue - 顶部导航栏
