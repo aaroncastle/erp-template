@@ -216,7 +216,6 @@ function handleLogout() {
         <div class="flex items-center gap-4">
           <DropdownMenu
             :items="dropdownItems"
-            trigger="click"
             align="left"
             @select="handleMenuSelect"
           >
@@ -227,23 +226,24 @@ function handleLogout() {
 
           <DropdownMenu
             :items="dropdownItems"
-            trigger="hover"
             align="right"
             @select="handleMenuSelect"
           >
             <button class="px-4 py-2 rounded-md bg-muted">
-              悬停打开
+              右对齐菜单
             </button>
           </DropdownMenu>
         </div>
 
         <div class="text-sm text-muted-foreground space-y-1">
           <p class="font-medium text-foreground">功能特性：</p>
-          <p>• 点击/悬停触发</p>
+          <p>• 点击触发</p>
           <p>• 左/右对齐</p>
           <p>• 禁用项</p>
           <p>• 危险操作项</p>
           <p>• 分隔线</p>
+          <p>• 点击外部关闭</p>
+          <p>• ESC键关闭</p>
           <p>• 动画效果</p>
         </div>
       </div>

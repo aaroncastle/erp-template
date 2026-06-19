@@ -13,13 +13,11 @@ export interface MenuItem {
 
 interface Props {
   items: MenuItem[]
-  trigger?: 'click' | 'hover'
   align?: 'left' | 'right'
   width?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  trigger: 'click',
   align: 'left',
   width: '200px',
 })
@@ -37,15 +35,7 @@ const alignClasses = {
 }
 
 function toggle() {
-  if (props.trigger === 'click') {
-    isOpen.value = !isOpen.value
-  }
-}
-
-function open() {
-  if (props.trigger === 'hover') {
-    isOpen.value = true
-  }
+  isOpen.value = !isOpen.value
 }
 
 function close() {
@@ -65,12 +55,21 @@ function handleClickOutside(event: MouseEvent) {
   }
 }
 
+// ESC键关闭
+function handleEsc(event: KeyboardEvent) {
+  if (event.key === 'Escape' && isOpen.value) {
+    close()
+  }
+}
+
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
+  document.addEventListener('keydown', handleEsc)
 })
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener('keydown', handleEsc)
 })
 </script>
 
@@ -79,9 +78,7 @@ onUnmounted(() => {
     <!-- 触发器 -->
     <div
       class="cursor-pointer"
-      @click="toggle"
-      @mouseenter="open"
-      @mouseleave="close"
+      @click.stop="toggle"
     >
       <slot />
     </div>
@@ -100,8 +97,6 @@ onUnmounted(() => {
         class="absolute z-50 mt-1 rounded-md border border-border bg-background shadow-lg"
         :class="alignClasses[align]"
         :style="{ width }"
-        @mouseenter="open"
-        @mouseleave="close"
       >
         <div class="p-1">
           <template v-for="item in items" :key="item.key">
