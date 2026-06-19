@@ -11,12 +11,23 @@ import DashboardCharts, { type ChartData, type StatCard } from '@/components/bus
 import FileUpload, { type UploadFile } from '@/components/business/FileUpload.vue'
 import PrintTemplate, { type PrintData } from '@/components/business/PrintTemplate.vue'
 import StatisticsCard, { type StatData } from '@/components/business/StatisticsCard.vue'
+import DataTable, { type Column } from '@/components/business/DataTable.vue'
+import Modal from '@/components/business/Modal.vue'
+import Timeline, { type TimelineItem } from '@/components/business/Timeline.vue'
+import CustomerDetail, { type CustomerDetail as CustomerDetailType } from '@/components/business/CustomerDetail.vue'
+import ProductList, { type Product } from '@/components/business/ProductList.vue'
+import ProgressBar from '@/components/business/ProgressBar.vue'
+import EmptyState from '@/components/business/EmptyState.vue'
+import Loading from '@/components/business/Loading.vue'
 
 const invoiceMode = ref<InvoiceMode>('sales')
 const showOrderDetail = ref(false)
 const showNotification = ref(false)
 const showCustomerSelect = ref(false)
 const showPrintTemplate = ref(false)
+const showModal = ref(false)
+const showCustomerDetail = ref(false)
+const showLoading = ref(false)
 
 // 模拟订单详情数据
 const mockOrderDetail = ref<OrderDetail>({
@@ -552,6 +563,108 @@ function handleUpload(file: UploadFile) {
 function handleRemove(fileId: string) {
   console.log('移除文件:', fileId)
 }
+
+// 模拟表格数据
+const mockTableColumns = ref<Column<any>[]>([
+  { key: 'id', label: 'ID', width: '80px', sortable: true },
+  { key: 'name', label: '名称', sortable: true },
+  { key: 'category', label: '分类', sortable: true },
+  { key: 'price', label: '价格', width: '120px', sortable: true, align: 'right' },
+  { key: 'stock', label: '库存', width: '100px', sortable: true, align: 'right' },
+])
+
+const mockTableData = ref([
+  { id: 1, name: '机械密封 A 型', category: '密封件', price: 850.00, stock: 100 },
+  { id: 2, name: '机械密封 B 型', category: '密封件', price: 950.00, stock: 80 },
+  { id: 3, name: '机械密封 C 型', category: '密封件', price: 650.00, stock: 150 },
+  { id: 4, name: '液压泵 A', category: '液压设备', price: 2500.00, stock: 30 },
+  { id: 5, name: '液压泵 B', category: '液压设备', price: 3200.00, stock: 25 },
+])
+
+// 模拟时间线数据
+const mockTimelineItems = ref<TimelineItem[]>([
+  {
+    id: '1',
+    title: '订单创建',
+    description: '销售一部创建订单',
+    timestamp: '2026-06-15 10:30',
+    status: 'completed',
+  },
+  {
+    id: '2',
+    title: '审批通过',
+    description: '综合办审批通过',
+    timestamp: '2026-06-15 14:20',
+    status: 'completed',
+  },
+  {
+    id: '3',
+    title: '生产中',
+    description: '生产车间开始生产',
+    timestamp: '2026-06-16 09:00',
+    status: 'in_progress',
+  },
+  {
+    id: '4',
+    title: '待发货',
+    description: '生产完成，等待发货',
+    timestamp: '',
+    status: 'pending',
+  },
+])
+
+// 模拟客户详情数据
+const mockCustomerDetail = ref<CustomerDetailType>({
+  id: '1',
+  name: '洛阳轴承集团',
+  contact: '张经理',
+  phone: '138****1234',
+  email: 'zhang@example.com',
+  address: '洛阳市老城区 A 路 1 号',
+  company: '洛阳轴承集团有限公司',
+  status: 'active',
+  createdAt: '2026-01-15',
+  orderCount: 28,
+  totalAmount: 568000.00,
+  remark: '重要客户，优先处理',
+})
+
+// 模拟产品列表数据
+const mockProducts = ref<Product[]>([
+  {
+    id: '1',
+    name: '机械密封 A 型',
+    specification: 'Φ100×Φ120×50',
+    category: '密封件',
+    unit: '个',
+    price: 850.00,
+    cost: 500.00,
+    stock: 100,
+    status: 'active',
+  },
+  {
+    id: '2',
+    name: '机械密封 B 型',
+    specification: 'Φ120×Φ140×60',
+    category: '密封件',
+    unit: '个',
+    price: 950.00,
+    cost: 550.00,
+    stock: 80,
+    status: 'active',
+  },
+  {
+    id: '3',
+    name: '机械密封 C 型',
+    specification: 'Φ80×Φ100×40',
+    category: '密封件',
+    unit: '个',
+    price: 650.00,
+    cost: 380.00,
+    stock: 150,
+    status: 'inactive',
+  },
+])
 </script>
 
 <template>
@@ -907,6 +1020,220 @@ function handleRemove(fileId: string) {
         </div>
       </div>
 
+      <!-- P3 新组件预览 -->
+
+      <!-- 数据表格 -->
+      <div class="rounded-lg border border-border p-6 space-y-4">
+        <div>
+          <h2 class="text-lg font-semibold text-foreground">数据表格</h2>
+          <p class="text-sm text-muted-foreground mt-1">
+            高级数据表格，支持排序、筛选、分页、选择
+          </p>
+        </div>
+
+        <DataTable
+          :columns="mockTableColumns"
+          :data="mockTableData"
+          :selectable="true"
+          :page-size="5"
+          search-placeholder="搜索产品..."
+          @select="(rows) => console.log('选择行:', rows)"
+          @row-click="(row) => console.log('点击行:', row)"
+        />
+
+        <div class="text-sm text-muted-foreground space-y-1">
+          <p class="font-medium text-foreground">功能特性：</p>
+          <p>• 搜索过滤</p>
+          <p>• 列排序</p>
+          <p>• 分页</p>
+          <p>• 行选择</p>
+          <p>• 加载状态</p>
+        </div>
+      </div>
+
+      <!-- 模态框 -->
+      <div class="rounded-lg border border-border p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-semibold text-foreground">模态框</h2>
+            <p class="text-sm text-muted-foreground mt-1">
+              通用弹窗组件
+            </p>
+          </div>
+          <button
+            class="px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+            @click="showModal = true"
+          >
+            打开模态框
+          </button>
+        </div>
+
+        <div class="text-sm text-muted-foreground space-y-1">
+          <p class="font-medium text-foreground">功能特性：</p>
+          <p>• 多种宽度（sm/md/lg/xl/full）</p>
+          <p>• 可关闭</p>
+          <p>• 支持头部操作</p>
+          <p>• 支持底部操作</p>
+        </div>
+      </div>
+
+      <!-- 时间线 -->
+      <div class="rounded-lg border border-border p-6 space-y-4">
+        <div>
+          <h2 class="text-lg font-semibold text-foreground">时间线</h2>
+          <p class="text-sm text-muted-foreground mt-1">
+            操作记录、订单流程展示
+          </p>
+        </div>
+
+        <Timeline :items="mockTimelineItems" />
+
+        <div class="text-sm text-muted-foreground space-y-1">
+          <p class="font-medium text-foreground">功能特性：</p>
+          <p>• 垂直/水平布局</p>
+          <p>• 多种状态</p>
+          <p>• 自定义图标</p>
+          <p>• 时间戳显示</p>
+        </div>
+      </div>
+
+      <!-- 客户详情 -->
+      <div class="rounded-lg border border-border p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-semibold text-foreground">客户详情</h2>
+            <p class="text-sm text-muted-foreground mt-1">
+              客户信息展示和编辑
+            </p>
+          </div>
+          <button
+            class="px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+            @click="showCustomerDetail = true"
+          >
+            打开客户详情
+          </button>
+        </div>
+
+        <div class="text-sm text-muted-foreground space-y-1">
+          <p class="font-medium text-foreground">功能特性：</p>
+          <p>• 基本信息展示</p>
+          <p>• 状态信息</p>
+          <p>• 业务统计</p>
+          <p>• 编辑/删除操作</p>
+        </div>
+      </div>
+
+      <!-- 产品列表 -->
+      <div class="rounded-lg border border-border p-6 space-y-4">
+        <div>
+          <h2 class="text-lg font-semibold text-foreground">产品列表</h2>
+          <p class="text-sm text-muted-foreground mt-1">
+            产品展示和管理
+          </p>
+        </div>
+
+        <ProductList
+          :products="mockProducts"
+          @add="() => console.log('添加产品')"
+          @edit="(product) => console.log('编辑产品:', product)"
+          @delete="(product) => console.log('删除产品:', product)"
+          @select="(product) => console.log('选择产品:', product)"
+        />
+
+        <div class="text-sm text-muted-foreground space-y-1">
+          <p class="font-medium text-foreground">功能特性：</p>
+          <p>• 产品搜索</p>
+          <p>• 状态显示</p>
+          <p>• 编辑/删除操作</p>
+          <p>• 空状态提示</p>
+        </div>
+      </div>
+
+      <!-- 进度条 -->
+      <div class="rounded-lg border border-border p-6 space-y-4">
+        <div>
+          <h2 class="text-lg font-semibold text-foreground">进度条</h2>
+          <p class="text-sm text-muted-foreground mt-1">
+            进度展示
+          </p>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <p class="text-sm text-muted-foreground mb-2">小尺寸 (25%)</p>
+            <ProgressBar :value="25" size="sm" />
+          </div>
+          <div>
+            <p class="text-sm text-muted-foreground mb-2">中尺寸 (50%)</p>
+            <ProgressBar :value="50" size="md" :show-label="true" />
+          </div>
+          <div>
+            <p class="text-sm text-muted-foreground mb-2">大尺寸 (75%)</p>
+            <ProgressBar :value="75" size="lg" :show-label="true" color="success" />
+          </div>
+          <div>
+            <p class="text-sm text-muted-foreground mb-2">警告色 (90%)</p>
+            <ProgressBar :value="90" :show-label="true" color="warning" />
+          </div>
+        </div>
+
+        <div class="text-sm text-muted-foreground space-y-1">
+          <p class="font-medium text-foreground">功能特性：</p>
+          <p>• 多种尺寸</p>
+          <p>• 多种颜色</p>
+          <p>• 标签显示</p>
+        </div>
+      </div>
+
+      <!-- 空状态 -->
+      <div class="rounded-lg border border-border p-6 space-y-4">
+        <div>
+          <h2 class="text-lg font-semibold text-foreground">空状态</h2>
+          <p class="text-sm text-muted-foreground mt-1">
+            空数据提示
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <EmptyState type="default" />
+          <EmptyState type="data" />
+          <EmptyState type="search" />
+          <EmptyState type="error" />
+        </div>
+
+        <div class="text-sm text-muted-foreground space-y-1">
+          <p class="font-medium text-foreground">功能特性：</p>
+          <p>• 多种类型</p>
+          <p>• 自定义标题和描述</p>
+          <p>• 操作按钮</p>
+        </div>
+      </div>
+
+      <!-- 加载状态 -->
+      <div class="rounded-lg border border-border p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-semibold text-foreground">加载状态</h2>
+            <p class="text-sm text-muted-foreground mt-1">
+              加载动画
+            </p>
+          </div>
+          <button
+            class="px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+            @click="showLoading = !showLoading"
+          >
+            {{ showLoading ? '关闭' : '打开' }}加载状态
+          </button>
+        </div>
+
+        <div class="text-sm text-muted-foreground space-y-1">
+          <p class="font-medium text-foreground">功能特性：</p>
+          <p>• 多种尺寸</p>
+          <p>• 全屏/内联模式</p>
+          <p>• 自定义文本</p>
+        </div>
+      </div>
+
       <!-- 组件 -->
       <InvoiceProcess
         v-model:open="showInvoice"
@@ -954,6 +1281,35 @@ function handleRemove(fileId: string) {
         @print="() => console.log('打印')"
         @download="() => console.log('下载')"
       />
+
+      <Modal
+        v-model:open="showModal"
+        title="模态框标题"
+        width="md"
+      >
+        <p class="text-sm text-muted-foreground">
+          这是模态框的内容区域。可以在这里放置任何内容。
+        </p>
+        <template #footer>
+          <div class="flex items-center justify-end gap-2">
+            <Button variant="outline" @click="showModal = false">
+              取消
+            </Button>
+            <Button @click="showModal = false">
+              确定
+            </Button>
+          </div>
+        </template>
+      </Modal>
+
+      <CustomerDetail
+        v-model:open="showCustomerDetail"
+        :customer="mockCustomerDetail"
+        @edit="(customer) => console.log('编辑客户:', customer)"
+        @delete="(customer) => console.log('删除客户:', customer)"
+      />
+
+      <Loading :loading="showLoading" fullscreen text="加载中..." />
     </div>
   </div>
 </template>

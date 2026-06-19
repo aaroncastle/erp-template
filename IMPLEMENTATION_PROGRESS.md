@@ -46,7 +46,24 @@ src/
 │   ├── ui/                    # shadcn 组件
 │   ├── business/              # 业务组件
 │   │   ├── OrderCard.vue
-│   │   └── NotificationCard.vue
+│   │   ├── NotificationCard.vue
+│   │   ├── QuotationCard.vue      # P1 - 待验收
+│   │   ├── OrderEditForm.vue      # P1 - 待验收
+│   │   ├── CustomerSelect.vue     # P1 - 待验收
+│   │   ├── DashboardCharts.vue    # P2 - 待验收
+│   │   ├── FileUpload.vue         # P2 - 待验收
+│   │   ├── PrintTemplate.vue      # P2 - 待验收
+│   │   ├── StatisticsCard.vue     # P2 - 待验收
+│   │   ├── DataTable.vue          # P3 - 待验收
+│   │   ├── Modal.vue              # P3 - 待验收
+│   │   ├── Toast.vue              # P3 - 待验收
+│   │   ├── Timeline.vue           # P3 - 待验收
+│   │   ├── Pagination.vue         # P3 - 待验收
+│   │   ├── CustomerDetail.vue     # P3 - 待验收
+│   │   ├── ProductList.vue        # P3 - 待验收
+│   │   ├── ProgressBar.vue        # P3 - 待验收
+│   │   ├── EmptyState.vue         # P3 - 待验收
+│   │   └── Loading.vue            # P3 - 待验收
 │   └── layout/                # 布局组件
 │       ├── Header.vue
 │       ├── RightPanel.vue
