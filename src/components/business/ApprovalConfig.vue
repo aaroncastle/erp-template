@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { GitBranch, Plus, Edit, Trash2, Save } from '@lucide/vue'
+import { GitBranch, Plus, Edit, Trash2, Save, User } from '@lucide/vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -20,7 +20,14 @@ export interface ApprovalFlow {
   name: string
   type: 'quotation' | 'order' | 'invoice' | 'payment'
   steps: ApprovalStep[]
+  defaultCcList?: CcPerson[]
   enabled: boolean
+}
+
+export interface CcPerson {
+  id: string
+  name: string
+  department?: string
 }
 
 interface Props {
@@ -57,7 +64,9 @@ const emit = defineEmits<{
 
 const localFlows = ref<ApprovalFlow[]>([...props.flows])
 const showUserSelect = ref(false)
+const showCcUserSelect = ref(false)
 const currentFlowId = ref<string>('')
+const isAddingCc = ref(false)
 
 const typeLabels = {
   quotation: '报价单',
@@ -114,6 +123,39 @@ function removeStep(flowId: string, stepId: string) {
     flow.steps.forEach((step, index) => {
       step.order = index + 1
     })
+  }
+}
+
+// 添加抄送人
+function addCcPerson(flowId: string) {
+  currentFlowId.value = flowId
+  isAddingCc.value = true
+  showCcUserSelect.value = true
+}
+
+// 选择抄送人
+function handleSelectCcUser(user: any) {
+  const flow = localFlows.value.find(f => f.id === currentFlowId.value)
+  if (flow) {
+    if (!flow.defaultCcList) {
+      flow.defaultCcList = []
+    }
+    const newCc: CcPerson = {
+      id: user.id,
+      name: user.name,
+      department: user.department,
+    }
+    flow.defaultCcList.push(newCc)
+  }
+  showCcUserSelect.value = false
+  isAddingCc.value = false
+}
+
+// 删除抄送人
+function removeCcPerson(flowId: string, ccId: string) {
+  const flow = localFlows.value.find(f => f.id === flowId)
+  if (flow && flow.defaultCcList) {
+    flow.defaultCcList = flow.defaultCcList.filter(cc => cc.id !== ccId)
   }
 }
 
@@ -193,15 +235,50 @@ function handleSave() {
               添加审批人
             </Button>
           </div>
+
+          <!-- 默认抄送人 -->
+          <div class="space-y-2 ml-8 mt-4">
+            <div class="flex items-center gap-2">
+              <User class="h-4 w-4 text-muted-foreground" />
+              <span class="text-sm font-medium text-foreground">默认抄送人</span>
+            </div>
+            <div
+              v-for="cc in flow.defaultCcList"
+              :key="cc.id"
+              class="flex items-center justify-between p-2 rounded-md bg-blue-50 dark:bg-blue-900/20"
+            >
+              <div class="flex items-center gap-2">
+                <User class="h-3 w-3 text-blue-600 dark:text-blue-400" />
+                <span class="text-sm font-medium text-foreground">{{ cc.name }}</span>
+                <span v-if="cc.department" class="text-xs text-muted-foreground">
+                  ({{ cc.department }})
+                </span>
+              </div>
+              <Button variant="ghost" size="sm" @click="removeCcPerson(flow.id, cc.id)">
+                <Trash2 class="h-3 w-3 text-destructive" />
+              </Button>
+            </div>
+            <Button variant="outline" size="sm" @click="addCcPerson(flow.id)">
+              <Plus class="h-3 w-3 mr-1" />
+              添加抄送人
+            </Button>
+          </div>
         </div>
       </div>
     </CardContent>
 
-    <!-- 用户选择器 -->
+    <!-- 用户选择器（审批人） -->
     <UserSelect
       v-model:open="showUserSelect"
       :users="[]"
       @select="handleSelectUser"
+    />
+
+    <!-- 用户选择器（抄送人） -->
+    <UserSelect
+      v-model:open="showCcUserSelect"
+      :users="[]"
+      @select="handleSelectCcUser"
     />
   </Card>
 </template>
