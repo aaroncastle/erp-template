@@ -2,123 +2,81 @@
 
 ## ✅ 已完成
 
-### 1. 基础布局组件
+### Phase 1 - 认证与权限组件
+- [x] UserSelect.vue - 用户选择器
+- [x] DepartmentSelect.vue - 部门选择器
+- [x] RoleSelect.vue - 角色选择器
+- [x] AlertBanner.vue - 提醒横幅
+- [x] VerifyCodeInput.vue - 验证码输入框
+
+### 基础布局组件（模板库）
 - [x] Header.vue - 顶部导航栏
-  - Logo + 公司名称（左）
-  - 部门名称（中）
-  - 主题切换 + 用户菜单（右）
-
 - [x] RightPanel.vue - 右侧悬浮框
-  - 模块切换（报价单/订单）
-  - Tab 状态筛选（全部/待处理/进行中/已完成）
-  - 搜索框
-  - 新建按钮
-  - 通知列表（未读显示）
-
 - [x] MainLayout.vue - 主布局容器
-  - 整合 Header 和 RightPanel
-  - 左侧卡片列表区域
-  - 面包屑导航
-  - 模式切换（列表/通知详情/选择）
 
-### 2. 业务组件
+### 业务组件
 - [x] OrderCard.vue - 订单卡片
-  - 标题区域（深色背景）
-  - 编号 + 复制图标
-  - 状态徽章
-  - 内容区域（客户、日期、进度、金额）
-  - 操作按钮区域
-
 - [x] NotificationCard.vue - 通知卡片
-  - 未读标记
-  - 类型图标
-  - 标题 + 描述 + 时间
-  - 点击即已读
+- [x] StatusBadge.vue - 状态徽章
+- [x] DualItemCard.vue - 阴阳项目卡片
+- [x] Drawer.vue - 通用抽屉
+- [x] OrderDetailDrawer.vue - 订单详情抽屉
+- [x] NotificationDrawer.vue - 通知中心抽屉
 
-### 3. 页面更新
-- [x] HomeView.vue - 使用 MainLayout
-- [x] CLAUDE.md - 更新组件规范
+### 通用UI组件
+- [x] DataTable.vue - 高级数据表格
+- [x] Modal.vue - 模态框
+- [x] Toast.vue - 消息提示
+- [x] Timeline.vue - 时间线
+- [x] Pagination.vue - 分页
+- [x] EmptyState.vue - 空状态
+- [x] Loading.vue - 加载状态
+- [x] ProgressBar.vue - 进度条
 
-### 4. 目录结构
-```
-src/
-├── components/
-│   ├── ui/                    # shadcn 组件
-│   ├── business/              # 业务组件
-│   │   ├── OrderCard.vue
-│   │   ├── NotificationCard.vue
-│   │   ├── QuotationCard.vue      # P1 - 待验收
-│   │   ├── OrderEditForm.vue      # P1 - 待验收
-│   │   ├── CustomerSelect.vue     # P1 - 待验收
-│   │   ├── DashboardCharts.vue    # P2 - 待验收
-│   │   ├── FileUpload.vue         # P2 - 待验收
-│   │   ├── PrintTemplate.vue      # P2 - 待验收
-│   │   ├── StatisticsCard.vue     # P2 - 待验收
-│   │   ├── DataTable.vue          # P3 - 待验收
-│   │   ├── Modal.vue              # P3 - 待验收
-│   │   ├── Toast.vue              # P3 - 待验收
-│   │   ├── Timeline.vue           # P3 - 待验收
-│   │   ├── Pagination.vue         # P3 - 待验收
-│   │   ├── CustomerDetail.vue     # P3 - 待验收
-│   │   ├── ProductList.vue        # P3 - 待验收
-│   │   ├── ProgressBar.vue        # P3 - 待验收
-│   │   ├── EmptyState.vue         # P3 - 待验收
-│   │   └── Loading.vue            # P3 - 待验收
-│   └── layout/                # 布局组件
-│       ├── Header.vue
-│       ├── RightPanel.vue
-│       └── MainLayout.vue
-├── stores/                    # Pinia 状态管理（待实现）
-└── composables/               # 组合式函数（待实现）
-```
+### 业务功能组件
+- [x] QuotationCard.vue - 报价单卡片
+- [x] OrderEditForm.vue - 订单编辑表单
+- [x] CustomerSelect.vue - 客户选择器
+- [x] CustomerDetail.vue - 客户详情抽屉
+- [x] ProductList.vue - 产品列表
+- [x] InvoiceProcess.vue - 联合开票流程
+- [x] ApprovalFlow.vue - 审批流程
+- [x] DashboardCharts.vue - 仪表盘图表
+- [x] FileUpload.vue - 文件上传
+- [x] PrintTemplate.vue - 打印模板
+- [x] StatisticsCard.vue - 统计卡片
 
-## 🚧 进行中
+## ❌ 不再实现
 
-### 5. 待实现组件
-- [ ] DualItemCard.vue - 阴阳项目卡片
-- [ ] StatusBadge.vue - 状态徽章
-- [ ] Drawer.vue - 抽屉组件
-- [ ] SelectionMode.vue - 选择模式组件
-- [ ] Breadcrumb.vue - 面包屑组件
-
-### 6. 待实现功能
-- [ ] 订单详情抽屉（左右分栏）
-- [ ] 通知详情模式
-- [ ] 选择模式（多选/拖拽）
-- [ ] 联合开票流程
-- [ ] 财务开票流程
+### Phase 2 - Zone布局组件（已删除）
+Zone布局组件已删除，使用模板库的布局系统。
+- ~~ZoneLayout.vue~~
+- ~~ProjectWarning.vue~~
+- ~~FunctionFilter.vue~~
+- ~~DetailPanel.vue~~
+- ~~SearchFunctionBar.vue~~
+- ~~NotificationPanel.vue~~
 
 ## 📋 下一步
 
-### 优先级 P0
-1. 实现 Drawer 组件（订单详情抽屉）
-2. 实现 DualItemCard 组件（阴阳项目）
-3. 实现 StatusBadge 组件
+### Phase 3 - 业务组件
+1. QuotationDetail.vue - 报价单详情抽屉
+2. InvoiceCard.vue - 发票卡片
+3. PaymentCard.vue - 支付卡片
+4. WarehouseCard.vue - 入库卡片
+5. UserManagement.vue - 用户管理
 
-### 优先级 P1
-4. 实现选择模式
-5. 实现通知详情模式
-6. 实现联合开票流程
-
-### 优先级 P2
-7. 实现财务开票流程
-8. 实现审批流程组件
-9. 实现图表组件
-
-##  当前状态
-
-访问 http://localhost:5173/ 可以看到：
-- 顶部导航栏
-- 右侧悬浮框（模块切换、Tab 筛选、搜索、通知）
-- 左侧订单卡片列表
-- 点击通知卡片切换到通知详情模式
+### Phase 4 - 管理组件
+1. PermissionConfig.vue - 权限配置
+2. ApprovalConfig.vue - 审批配置
+3. SystemLog.vue - 系统日志
+4. LoginLog.vue - 登录日志
 
 ## 📝 注意事项
 
-1. **复制功能**：OrderCard 中的复制图标已实现，点击复制编号到剪贴板
-2. **通知逻辑**：点击通知卡片 → 左侧切换为通知详情模式
-3. **响应式**：卡片列表支持响应式布局（1/2/3 列）
-4. **主题支持**：支持亮色/暗色主题切换
+1. **布局系统**：使用模板库的布局，不再实现Zone布局
+2. **组件复用**：优先使用已实现的通用组件
+3. **设计规范**：遵循shadcn-vue设计系统
 
 ## 🔧 技术细节
 
