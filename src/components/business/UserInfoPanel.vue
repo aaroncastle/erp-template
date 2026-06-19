@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { User, Settings, LogOut, Bell, Key } from '@lucide/vue'
+import { User, Settings, LogOut, Key } from '@lucide/vue'
 import Avatar from './Avatar.vue'
 import Badge from './Badge.vue'
 import DropdownMenu, { type MenuItem } from './DropdownMenu.vue'
@@ -26,7 +26,6 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (e: 'profile'): void
   (e: 'settings'): void
-  (e: 'notifications'): void
   (e: 'change-password'): void
   (e: 'logout'): void
 }>()
@@ -47,9 +46,6 @@ function handleSelect(item: MenuItem) {
     case 'settings':
       emit('settings')
       break
-    case 'notifications':
-      emit('notifications')
-      break
     case 'change-password':
       emit('change-password')
       break
@@ -61,39 +57,24 @@ function handleSelect(item: MenuItem) {
 </script>
 
 <template>
-  <div class="flex items-center gap-3">
-    <!-- 通知图标 -->
-    <button
-      class="relative p-2 rounded-md hover:bg-muted transition-colors"
-      @click="emit('notifications')"
-    >
-      <Bell class="h-5 w-5 text-foreground" />
+  <DropdownMenu
+    :items="menuItems"
+    trigger="click"
+    align="right"
+    width="180px"
+    @select="handleSelect"
+  >
+    <div class="relative cursor-pointer p-1 rounded-md hover:bg-muted transition-colors">
+      <Avatar
+        :src="user.avatar"
+        :name="user.name"
+        size="sm"
+      />
       <Badge
         v-if="showUnreadBadge && user.unreadCount && user.unreadCount > 0"
         :count="user.unreadCount"
         class="absolute -top-1 -right-1"
       />
-    </button>
-
-    <!-- 用户菜单 -->
-    <DropdownMenu
-      :items="menuItems"
-      trigger="click"
-      align="right"
-      width="180px"
-      @select="handleSelect"
-    >
-      <div class="flex items-center gap-2 cursor-pointer p-1 rounded-md hover:bg-muted transition-colors">
-        <Avatar
-          :src="user.avatar"
-          :name="user.name"
-          size="sm"
-        />
-        <div class="hidden md:block">
-          <p class="text-sm font-medium text-foreground">{{ user.name }}</p>
-          <p class="text-xs text-muted-foreground">{{ user.employeeNumber }}</p>
-        </div>
-      </div>
-    </DropdownMenu>
-  </div>
+    </div>
+  </DropdownMenu>
 </template>

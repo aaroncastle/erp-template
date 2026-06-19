@@ -64,10 +64,6 @@ function handleSettings() {
   console.log('系统设置')
 }
 
-function handleNotifications() {
-  console.log('通知中心')
-}
-
 function handleLogout() {
   console.log('退出登录')
 }
@@ -262,7 +258,6 @@ function handleLogout() {
             :user="mockUser"
             @profile="handleProfile"
             @settings="handleSettings"
-            @notifications="handleNotifications"
             @change-password="() => console.log('修改密码')"
             @logout="handleLogout"
           />
@@ -271,9 +266,8 @@ function handleLogout() {
         <div class="text-sm text-muted-foreground space-y-1">
           <p class="font-medium text-foreground">功能特性：</p>
           <p>• 用户头像显示</p>
-          <p>• 未读通知徽章</p>
+          <p>• 未读通知徽章（头像右上角）</p>
           <p>• 下拉菜单（个人信息/设置/修改密码/退出）</p>
-          <p>• 响应式布局</p>
         </div>
       </div>
     </div>
