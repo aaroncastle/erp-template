@@ -37,6 +37,12 @@
 - [x] SearchFilterBar.vue - 搜索筛选栏
 - [x] ConfirmDialog.vue - 二次确认对话框
 
+### Phase 7 - 业务展示增强组件（已验收）
+- [x] NotificationList.vue - 通知列表
+- [x] OrderItemCard.vue - 订单项卡片
+- [x] ApprovalTimeline.vue - 审批时间线节点
+- [x] OperationLog.vue - 操作记录列表
+
 ### 基础布局组件（模板库）
 - [x] Header.vue - 顶部导航栏
 - [x] RightPanel.vue - 右侧悬浮框

@@ -1,80 +1,172 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import CardHeader from '@/components/business/CardHeader.vue'
-import CopyableNumber from '@/components/business/CopyableNumber.vue'
-import FilterTabs from '@/components/business/FilterTabs.vue'
-import SearchFilterBar from '@/components/business/SearchFilterBar.vue'
-import ConfirmDialog from '@/components/business/ConfirmDialog.vue'
-import type { MenuItem } from '@/components/business/DropdownMenu.vue'
+import NotificationList from '@/components/business/NotificationList.vue'
+import OrderItemCard from '@/components/business/OrderItemCard.vue'
+import ApprovalTimeline from '@/components/business/ApprovalTimeline.vue'
+import OperationLog from '@/components/business/OperationLog.vue'
+import type { Notification } from '@/components/business/NotificationList.vue'
+import type { OrderItem } from '@/components/business/OrderItemCard.vue'
+import type { ApprovalNode } from '@/components/business/ApprovalTimeline.vue'
+import type { OperationRecord } from '@/components/business/OperationLog.vue'
 
-// CardHeader 菜单项
-const headerMenuItems: MenuItem[] = [
-  { key: 'edit', label: '编辑' },
-  { key: 'duplicate', label: '复制' },
-  { key: 'divider', label: '', divider: true },
-  { key: 'delete', label: '删除', danger: true },
-]
-
-// FilterTabs 数据
-const tabs = ref([
-  { key: 'all', label: '全部', count: 12 },
-  { key: 'pending', label: '待处理', count: 3 },
-  { key: 'progress', label: '进行中', count: 5 },
-  { key: 'completed', label: '已完成', count: 4 },
+// 通知数据
+const notifications = ref<Notification[]>([
+  {
+    id: '1',
+    type: 'pending_invoice',
+    title: '待开票通知',
+    description: '订单 ORD-20260615-003',
+    time: '10 分钟前',
+    unread: true,
+    relatedId: 'ORD-20260615-003',
+  },
+  {
+    id: '2',
+    type: 'modification_request',
+    title: '修改申请',
+    description: '订单 ORD-20260610-002',
+    time: '1 小时前',
+    unread: true,
+  },
+  {
+    id: '3',
+    type: 'storage_complete',
+    title: '入库完成',
+    description: '订单 ORD-20260608-001',
+    time: '2 小时前',
+    unread: true,
+  },
 ])
-const activeTab = ref('all')
 
-// SearchFilterBar 数据
-const filters = [
+// 订单项数据
+const orderItems = ref<OrderItem[]>([
   {
-    key: 'customer',
-    label: '客户',
-    options: [
-      { label: '洛阳轴承集团', value: '1' },
-      { label: '中石化洛阳分公司', value: '2' },
-      { label: '洛阳能源密封件', value: '3' },
-    ],
+    id: '1',
+    name: '缠绕垫片 DN50 PN16 加强型',
+    specification: 'DN50 PN16 加强型',
+    quantity: 10,
+    unit: '个',
+    costPrice: 1200,
+    sellPrice: 1500,
+    materialCode: 'BCR-0001',
+    status: 'in_progress',
+    isCustomerSpecified: false,
+    hasDualItem: true,
+    dualItemName: '缠绕垫片 DN50 PN16',
+    dualItemNote: '实际生产 B 项',
   },
   {
-    key: 'status',
-    label: '状态',
-    options: [
-      { label: '待处理', value: 'pending' },
-      { label: '进行中', value: 'progress' },
-      { label: '已完成', value: 'completed' },
-    ],
+    id: '2',
+    name: '金属垫片 DN100 PN25',
+    specification: 'DN100 PN25',
+    quantity: 5,
+    unit: '个',
+    costPrice: 850,
+    sellPrice: 1100,
+    materialCode: 'JH-0012',
+    status: 'pending',
+    hasDualItem: false,
   },
-]
+  {
+    id: '3',
+    name: '石墨环 DN80',
+    specification: 'DN80',
+    quantity: 20,
+    unit: '个',
+    costPrice: 400,
+    sellPrice: 600,
+    materialCode: 'SH-0003',
+    status: 'completed',
+    isCustomerSpecified: true,
+    customerNote: '客户指定规格',
+    hasDualItem: false,
+  },
+])
 
-// ConfirmDialog
-const showConfirmDialog = ref(false)
-const confirmType = ref<'warning' | 'danger'>('warning')
+// 审批流程数据
+const approvalNodes = ref<ApprovalNode[]>([
+  {
+    id: '1',
+    title: '发起申请',
+    approver: '张三',
+    department: '销售一部',
+    status: 'approved',
+    time: '2026-06-18 14:30',
+  },
+  {
+    id: '2',
+    title: '综合办审核',
+    approver: '李四',
+    department: '综合办',
+    status: 'rejected',
+    time: '2026-06-18 15:00',
+    comment: '车间排产已满，无法延期',
+  },
+  {
+    id: '3',
+    title: '多级审批',
+    approver: '王五',
+    status: 'pending',
+    isCountersign: true,
+    countersignApprovers: ['王五', '赵六'],
+    ccList: ['孙七', '周八'],
+  },
+])
 
-function openDangerDialog() {
-  confirmType.value = 'danger'
-  showConfirmDialog.value = true
+// 操作记录数据
+const operationRecords = ref<OperationRecord[]>([
+  {
+    id: '1',
+    action: '创建订单',
+    operator: '张三',
+    operatorDepartment: '销售一部',
+    time: '06-15 10:00',
+    details: '创建订单 ORD-20260615-003',
+  },
+  {
+    id: '2',
+    action: '转订单',
+    operator: '张三',
+    operatorDepartment: '销售一部',
+    time: '06-16 09:30',
+    details: '报价单转订单',
+  },
+  {
+    id: '3',
+    action: '入库',
+    operator: '仓库管理员',
+    operatorDepartment: '仓储部',
+    time: '06-17 14:00',
+    details: '入库 3 项',
+  },
+  {
+    id: '4',
+    action: '发货',
+    operator: '仓库管理员',
+    operatorDepartment: '仓储部',
+    time: '06-18 16:00',
+    details: '已发货',
+  },
+])
+
+function handleNotificationClick(notification: Notification) {
+  console.log('点击通知:', notification)
 }
 
-function openWarningDialog() {
-  confirmType.value = 'warning'
-  showConfirmDialog.value = true
+function handleViewAll() {
+  console.log('查看全部通知')
 }
 
-function handleConfirm() {
-  console.log('确认操作')
-  showConfirmDialog.value = false
+function handleItemEdit(item: OrderItem) {
+  console.log('编辑订单项:', item)
 }
 
-function handleSearch(value: string) {
-  console.log('搜索:', value)
+function handleItemDelete(item: OrderItem) {
+  console.log('删除订单项:', item)
 }
 
-function handleFilter(key: string, value: string) {
-  console.log('筛选:', key, value)
-}
-
-function handleCreate() {
-  console.log('新建')
+function handleViewDrawing(item: OrderItem) {
+  console.log('查看图纸:', item)
 }
 </script>
 
@@ -84,176 +176,92 @@ function handleCreate() {
       <!-- 页面标题 -->
       <div class="space-y-2">
         <h1 class="text-2xl font-bold text-foreground">组件预览</h1>
-        <p class="text-muted-foreground">Phase 6 - 通用UI增强组件</p>
+        <p class="text-muted-foreground">Phase 7 - 业务展示增强组件</p>
       </div>
 
-      <!-- CardHeader 卡片标题 -->
+      <!-- NotificationList 通知列表 -->
       <div class="rounded-lg border border-border">
         <div class="p-4 border-b border-border">
-          <h2 class="text-lg font-semibold text-foreground">CardHeader - 卡片标题区域</h2>
-          <p class="text-sm text-muted-foreground mt-1">卡片深色标题区域，含状态徽章和更多菜单</p>
+          <h2 class="text-lg font-semibold text-foreground">NotificationList - 通知列表</h2>
+          <p class="text-sm text-muted-foreground mt-1">未读通知列表，支持查看全部入口</p>
         </div>
 
-        <div class="p-4 space-y-4">
-          <!-- 示例 1: 基础标题 -->
-          <div class="rounded-lg overflow-hidden border border-border">
-            <CardHeader title="订单 ORD-20260615-003" status="pending_delivery" />
-            <div class="p-4 bg-background">
-              <p class="text-sm text-muted-foreground">卡片内容区域</p>
-            </div>
-          </div>
-
-          <!-- 示例 2: 带菜单 -->
-          <div class="rounded-lg overflow-hidden border border-border">
-            <CardHeader
-              title="报价单 QT-20260618-001"
-              subtitle="洛阳轴承集团"
-              status="pending"
-              :menu-items="headerMenuItems"
-              @menu-select="(item) => console.log('菜单:', item)"
-            />
-            <div class="p-4 bg-background">
-              <p class="text-sm text-muted-foreground">卡片内容区域</p>
-            </div>
-          </div>
-
-          <!-- 示例 3: 自定义标题插槽 -->
-          <div class="rounded-lg overflow-hidden border border-border">
-            <CardHeader>
-              <template #title>
-                <div class="flex items-center gap-2">
-                  <span class="font-mono text-sm font-semibold text-foreground">ORD-20260610-002</span>
-                  <span class="px-2 py-0.5 text-xs bg-blue-500/10 text-blue-500 rounded">紧急</span>
-                </div>
-              </template>
-            </CardHeader>
-            <div class="p-4 bg-background">
-              <p class="text-sm text-muted-foreground">自定义标题内容</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- CopyableNumber 可复制编号 -->
-      <div class="rounded-lg border border-border">
-        <div class="p-4 border-b border-border">
-          <h2 class="text-lg font-semibold text-foreground">CopyableNumber - 可复制编号</h2>
-          <p class="text-sm text-muted-foreground mt-1">点击复制图标可复制编号到剪贴板</p>
-        </div>
-
-        <div class="p-4 space-y-4">
-          <!-- 示例 1: 订单编号 -->
-          <div class="flex items-center gap-4 p-3 bg-muted rounded-lg">
-            <span class="text-sm text-muted-foreground">订单编号:</span>
-            <CopyableNumber value="ORD-20260615-003" />
-          </div>
-
-          <!-- 示例 2: 报价单编号 -->
-          <div class="flex items-center gap-4 p-3 bg-muted rounded-lg">
-            <span class="text-sm text-muted-foreground">报价单号:</span>
-            <CopyableNumber value="QT-20260618-001" label="报价单" />
-          </div>
-
-          <!-- 示例 3: 物料码 -->
-          <div class="flex items-center gap-4 p-3 bg-muted rounded-lg">
-            <span class="text-sm text-muted-foreground">物料码:</span>
-            <CopyableNumber value="BCR-0001" :show-label="false" />
-          </div>
-        </div>
-      </div>
-
-      <!-- FilterTabs 状态筛选 -->
-      <div class="rounded-lg border border-border">
-        <div class="p-4 border-b border-border">
-          <h2 class="text-lg font-semibold text-foreground">FilterTabs - Tab状态筛选</h2>
-          <p class="text-sm text-muted-foreground mt-1">列表页顶部的状态筛选Tab</p>
-        </div>
-
-        <div class="p-4 space-y-4">
-          <FilterTabs v-model:active-tab="activeTab" :tabs="tabs" />
-          <div class="p-3 bg-muted rounded-lg">
-            <p class="text-sm text-muted-foreground">当前选中: {{ activeTab }}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- SearchFilterBar 搜索筛选栏 -->
-      <div class="rounded-lg border border-border">
-        <div class="p-4 border-b border-border">
-          <h2 class="text-lg font-semibold text-foreground">SearchFilterBar - 搜索筛选栏</h2>
-          <p class="text-sm text-muted-foreground mt-1">下拉筛选 + 搜索框 + 新建按钮</p>
-        </div>
-
-        <div class="p-4 space-y-4">
-          <!-- 示例 1: 完整功能 -->
-          <div class="border border-border rounded-lg overflow-hidden">
-            <SearchFilterBar
-              :filters="filters"
-              search-placeholder="搜索客户名称、订单编号..."
-              :show-create-button="true"
-              create-button-text="新建订单"
-              @search="handleSearch"
-              @filter="handleFilter"
-              @create="handleCreate"
-            />
-            <div class="p-4 bg-background">
-              <p class="text-sm text-muted-foreground">列表内容区域</p>
-            </div>
-          </div>
-
-          <!-- 示例 2: 仅搜索 -->
-          <div class="border border-border rounded-lg overflow-hidden">
-            <SearchFilterBar
-              search-placeholder="搜索..."
-              @search="handleSearch"
+        <div class="p-4">
+          <div class="h-[300px] border border-border rounded-lg overflow-hidden">
+            <NotificationList
+              :notifications="notifications"
+              title="通知"
+              :show-view-all="true"
+              @click="handleNotificationClick"
+              @view-all="handleViewAll"
             />
           </div>
         </div>
       </div>
 
-      <!-- ConfirmDialog 二次确认 -->
+      <!-- OrderItemCard 订单项卡片 -->
       <div class="rounded-lg border border-border">
         <div class="p-4 border-b border-border">
-          <h2 class="text-lg font-semibold text-foreground">ConfirmDialog - 二次确认对话框</h2>
-          <p class="text-sm text-muted-foreground mt-1">危险操作的二次确认弹窗</p>
+          <h2 class="text-lg font-semibold text-foreground">OrderItemCard - 订单项卡片</h2>
+          <p class="text-sm text-muted-foreground mt-1">订单项详情展示，支持阴阳项目</p>
         </div>
 
-        <div class="p-4 space-y-4">
-          <div class="flex items-center gap-3">
-            <button
-              class="px-4 py-2 text-sm font-medium bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-colors"
-              @click="openWarningDialog"
-            >
-              警告确认
-            </button>
-            <button
-              class="px-4 py-2 text-sm font-medium bg-destructive text-white rounded-md hover:bg-destructive/90 transition-colors"
-              @click="openDangerDialog"
-            >
-              危险确认
-            </button>
-          </div>
+        <div class="p-4 space-y-3">
+          <OrderItemCard
+            v-for="item in orderItems"
+            :key="item.id"
+            :item="item"
+            :show-actions="true"
+            :show-dual-item="true"
+            @edit="handleItemEdit"
+            @delete="handleItemDelete"
+            @view-drawing="handleViewDrawing"
+          />
+        </div>
+      </div>
 
-          <ConfirmDialog
-            v-model:open="showConfirmDialog"
-            :title="confirmType === 'danger' ? '确认删除？' : '确认取消选择？'"
-            :description="confirmType === 'danger' ? '删除后无法恢复，请确认操作。' : '已选择 5 个订单项，取消后将清空所有选择。'"
-            :type="confirmType"
-            :confirm-text="confirmType === 'danger' ? '确认删除' : '确认取消'"
-            @confirm="handleConfirm"
+      <!-- ApprovalTimeline 审批时间线 -->
+      <div class="rounded-lg border border-border">
+        <div class="p-4 border-b border-border">
+          <h2 class="text-lg font-semibold text-foreground">ApprovalTimeline - 审批时间线</h2>
+          <p class="text-sm text-muted-foreground mt-1">审批流程节点展示</p>
+        </div>
+
+        <div class="p-4">
+          <div class="max-w-md">
+            <ApprovalTimeline
+              v-for="(node, index) in approvalNodes"
+              :key="node.id"
+              :node="node"
+              :is-last="index === approvalNodes.length - 1"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- OperationLog 操作记录 -->
+      <div class="rounded-lg border border-border">
+        <div class="p-4 border-b border-border">
+          <h2 class="text-lg font-semibold text-foreground">OperationLog - 操作记录</h2>
+          <p class="text-sm text-muted-foreground mt-1">操作记录列表展示</p>
+        </div>
+
+        <div class="p-4">
+          <OperationLog
+            :records="operationRecords"
+            title="操作记录"
           />
         </div>
       </div>
 
       <!-- 功能特性说明 -->
       <div class="rounded-lg border border-border p-4">
-        <h3 class="text-sm font-semibold text-foreground mb-2">Phase 6 组件特性</h3>
+        <h3 class="text-sm font-semibold text-foreground mb-2">Phase 7 组件特性</h3>
         <ul class="text-sm text-muted-foreground space-y-1">
-          <li>• <strong>CardHeader</strong>: 卡片标题区域，支持状态徽章和下拉菜单</li>
-          <li>• <strong>CopyableNumber</strong>: 可复制编号，点击复制并显示Toast提示</li>
-          <li>• <strong>FilterTabs</strong>: Tab状态筛选，支持计数显示</li>
-          <li>• <strong>SearchFilterBar</strong>: 搜索筛选栏，支持多筛选条件和新建按钮</li>
-          <li>• <strong>ConfirmDialog</strong>: 二次确认对话框，支持警告和危险两种类型</li>
+          <li>• <strong>NotificationList</strong>: 通知列表，显示未读通知和查看全部入口</li>
+          <li>• <strong>OrderItemCard</strong>: 订单项卡片，支持阴阳项目、操作按钮</li>
+          <li>• <strong>ApprovalTimeline</strong>: 审批时间线，支持会签、抄送</li>
+          <li>• <strong>OperationLog</strong>: 操作记录列表，显示操作人、时间、详情</li>
         </ul>
       </div>
     </div>
