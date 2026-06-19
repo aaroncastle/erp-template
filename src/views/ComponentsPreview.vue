@@ -14,7 +14,6 @@ const mockUser = ref<UserInfo>({
   employeeNumber: 'EMP001',
   department: '销售一部',
   role: 'department-user',
-  unreadCount: 5,
 })
 
 // 模拟登录表单
@@ -266,7 +265,7 @@ function handleLogout() {
         <div class="text-sm text-muted-foreground space-y-1">
           <p class="font-medium text-foreground">功能特性：</p>
           <p>• 用户头像显示</p>
-          <p>• 未读通知徽章（头像右上角）</p>
+          <p>• 姓名和工号显示</p>
           <p>• 下拉菜单（个人信息/设置/修改密码/退出）</p>
         </div>
       </div>

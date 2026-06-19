@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { User, Settings, LogOut, Key } from '@lucide/vue'
 import Avatar from './Avatar.vue'
-import Badge from './Badge.vue'
 import DropdownMenu, { type MenuItem } from './DropdownMenu.vue'
 
 export interface UserInfo {
@@ -11,17 +10,13 @@ export interface UserInfo {
   avatar?: string
   department?: string
   role?: string
-  unreadCount?: number
 }
 
 interface Props {
   user: UserInfo
-  showUnreadBadge?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  showUnreadBadge: true,
-})
+defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'profile'): void
@@ -64,17 +59,16 @@ function handleSelect(item: MenuItem) {
     width="180px"
     @select="handleSelect"
   >
-    <div class="relative cursor-pointer p-1 rounded-md hover:bg-muted transition-colors">
+    <div class="flex items-center gap-2 cursor-pointer p-1 rounded-md hover:bg-muted transition-colors">
       <Avatar
         :src="user.avatar"
         :name="user.name"
         size="sm"
       />
-      <Badge
-        v-if="showUnreadBadge && user.unreadCount && user.unreadCount > 0"
-        :count="user.unreadCount"
-        class="absolute -top-1 -right-1"
-      />
+      <div class="hidden md:block">
+        <p class="text-sm font-medium text-foreground">{{ user.name }}</p>
+        <p class="text-xs text-muted-foreground">{{ user.employeeNumber }}</p>
+      </div>
     </div>
   </DropdownMenu>
 </template>
