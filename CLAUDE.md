@@ -20,10 +20,15 @@
    - Checkbox：复选框组件
 
 3. **业务组件** (`src/components/business/`)
-   - OrderCard：订单卡片组件（含编号复制、状态徽章、操作按钮）
-   - NotificationCard：通知卡片组件（点击即已读）
-   - DualItemCard：阴阳项目卡片组件（待实现）
-   - StatusBadge：状态徽章组件（待实现）
+   - **认证组件**: LoginForm, ChangePasswordForm, Avatar, Badge, DropdownMenu, UserInfoPanel
+   - **选择器**: UserSelect, DepartmentSelect, RoleSelect, CustomerSelect
+   - **卡片组件**: OrderCard, NotificationCard, QuotationCard, InvoiceCard, PaymentCard, WarehouseCard, DualItemCard, OrderItemCard
+   - **状态展示**: StatusBadge, AlertBanner, Badge, VerifyCodeInput
+   - **通用UI**: CardHeader, CopyableNumber, FilterTabs, SearchFilterBar, ConfirmDialog, Modal, Toast, Timeline, Pagination, EmptyState, Loading, ProgressBar, Drawer, DataTable
+   - **表单增强**: NumberInput, DateRangePicker
+   - **业务展示**: NotificationList, ApprovalTimeline, OperationLog, ApprovalFlow, InvoiceProcess, QuotationDetail, OrderDetailDrawer, NotificationDrawer, CustomerDetail
+   - **管理组件**: UserManagement, PermissionConfig, ApprovalConfig, SystemLog, LoginLog
+   - **其他**: Breadcrumb, SelectionMode, StatisticsCard, DashboardCharts, FileUpload, PrintTemplate, ProductList, OrderEditForm
 
 4. **布局组件** (`src/components/layout/`)
    - Header：顶部导航栏（Logo + 部门 + 主题 + 用户）
@@ -134,11 +139,14 @@ src/
 │   │   ├── table/
 │   │   ├── label/
 │   │   └── checkbox/
-│   ├── business/              # 业务组件
-│   │   ├── OrderCard.vue
-│   │   ├── NotificationCard.vue
-│   │   ├── DualItemCard.vue   # 待实现
-│   │   └── StatusBadge.vue    # 待实现
+│   ├── business/              # 业务组件（31个）
+│   │   ├── 认证: LoginForm, ChangePasswordForm, Avatar, Badge, DropdownMenu, UserInfoPanel
+│   │   ├── 选择器: UserSelect, DepartmentSelect, RoleSelect, CustomerSelect
+│   │   ├── 卡片: OrderCard, NotificationCard, QuotationCard, InvoiceCard, PaymentCard, WarehouseCard, DualItemCard, OrderItemCard
+│   │   ├── 通用UI: CardHeader, CopyableNumber, FilterTabs, SearchFilterBar, ConfirmDialog, Modal, Toast, Timeline, Pagination, EmptyState, Loading, ProgressBar, Drawer, DataTable
+│   │   ├── 表单: NumberInput, DateRangePicker
+│   │   ├── 展示: NotificationList, ApprovalTimeline, OperationLog, StatusBadge, AlertBanner
+│   │   └── 管理: UserManagement, PermissionConfig, ApprovalConfig, SystemLog, LoginLog
 │   ├── layout/                # 布局组件
 │   │   ├── Header.vue
 │   │   ├── RightPanel.vue
@@ -183,3 +191,7 @@ pnpm format
 # 类型检查
 pnpm type-check
 ```
+
+### 组件预览
+
+访问 `/preview` 路由可查看组件预览页面，用于开发和验证组件。
