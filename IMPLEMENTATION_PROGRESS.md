@@ -43,6 +43,10 @@
 - [x] ApprovalTimeline.vue - 审批时间线节点
 - [x] OperationLog.vue - 操作记录列表
 
+### Phase 8 - 表单增强组件（已验收）
+- [x] NumberInput.vue - 数字输入框
+- [x] DateRangePicker.vue - 日期范围选择器
+
 ### 基础布局组件（模板库）
 - [x] Header.vue - 顶部导航栏
 - [x] RightPanel.vue - 右侧悬浮框
